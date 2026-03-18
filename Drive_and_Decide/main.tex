@@ -1,0 +1,48 @@
+\documentclass[nonacm]{acmart}
+
+
+%%
+%% \BibTeX command to typeset BibTeX logo in the docs
+\AtBeginDocument{%
+  \providecommand\BibTeX{{%
+    \normalfont B\kern-0.5em{\scshape i\kern-0.25em b}\kern-0.8em\TeX}}}
+
+%%
+%% These commands are for a JOURNAL article.
+%% PLEASE IGNORE THEM!
+\acmJournal{TOIT}
+\acmVolume{37}
+\acmNumber{4}
+\acmArticle{111}
+\acmMonth{8}
+
+%%
+%% end of the preamble, start of the body of the document source.
+\usepackage{textcomp}
+\usepackage{multirow}
+\usepackage{array}
+\usepackage{hyperref}
+\usepackage[backend=biber, style=ieee, citestyle=numeric-comp]{biblatex}
+\usepackage[printonlyused]{acronym}
+\addbibresource{section/references.bib}
+
+\setcopyright{none}
+\settopmatter{printacmref=false} % Removes citation information below abstract
+\renewcommand\footnotetextcopyrightpermission[1]{} % removes footnote with conference information in first column
+\pagestyle{plain}
+
+\begin{document}
+
+\input{section/title}
+\input{section/authors}
+
+\settopmatter{printfolios=true}
+\maketitle
+\input{section/projekt-idee}
+\input{section/references}
+\input{section/acronyms}
+
+\end{document}
+\endinput
+%%
+%% End of file 
