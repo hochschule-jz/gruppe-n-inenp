@@ -1,0 +1,139 @@
+%%% -*-BibTeX-*-
+%%% Do NOT edit. File created by BibTeX with style
+%%% ACM-Reference-Format-Journals [18-Jan-2012].
+
+\begin{thebibliography}{9}
+
+%%% ====================================================================
+%%% NOTE TO THE USER: you can override these defaults by providing
+%%% customized versions of any of these macros before the \bibliography
+%%% command.  Each of them MUST provide its own final punctuation,
+%%% except for \shownote{} and \showURL{}.  The latter two
+%%% do not use final punctuation, in order to avoid confusing it with
+%%% the Web address.
+%%%
+%%% To suppress output of a particular field, define its macro to expand
+%%% to an empty string, or better, \unskip, like this:
+%%%
+%%% \newcommand{\showURL}[1]{\unskip}   % LaTeX syntax
+%%%
+%%% \def \showURL #1{\unskip}           % plain TeX syntax
+%%%
+%%% ====================================================================
+
+\ifx \showCODEN    \undefined \def \showCODEN     #1{\unskip}     \fi
+\ifx \showISBNx    \undefined \def \showISBNx     #1{\unskip}     \fi
+\ifx \showISBNxiii \undefined \def \showISBNxiii  #1{\unskip}     \fi
+\ifx \showISSN     \undefined \def \showISSN      #1{\unskip}     \fi
+\ifx \showLCCN     \undefined \def \showLCCN      #1{\unskip}     \fi
+\ifx \shownote     \undefined \def \shownote      #1{#1}          \fi
+\ifx \showarticletitle \undefined \def \showarticletitle #1{#1}   \fi
+\ifx \showURL      \undefined \def \showURL       {\relax}        \fi
+% The following commands are used for tagged output and should be
+% invisible to TeX
+\providecommand\bibfield[2]{#2}
+\providecommand\bibinfo[2]{#2}
+\providecommand\natexlab[1]{#1}
+\providecommand\showeprint[2][]{arXiv:#2}
+
+\bibitem[{AK N\"O}(2025)]%
+        {aknoAKNiederosterreichPendleranalyse20252025}
+\bibfield{author}{\bibinfo{person}{{AK N\"O}}.}
+  \bibinfo{year}{2025}\natexlab{}.
+\newblock \bibinfo{title}{{{AK Nieder\"osterreich-Pendleranalyse}} 2025}.
+\newblock
+  \bibinfo{howpublished}{https://noe.arbeiterkammer.at/service/presse/AK-Niederoesterreich-Pendleranalyse-2025.html}.
+\newblock
+
+
+\bibitem[{BMI}(2026)]%
+        {bmi397VerkehrstoteAuf2026}
+\bibfield{author}{\bibinfo{person}{{BMI}}.} \bibinfo{year}{2026}\natexlab{}.
+\newblock \bibinfo{title}{{397 Verkehrstote auf \"Osterreichs Stra\ss en im
+  Jahr 2025}}.
+\newblock
+  \bibinfo{howpublished}{https://www.bmi.gv.at/news.aspx?id=2F2B49634A5558435352413D}.
+\newblock
+
+
+\bibitem[Hatzl(2025)]%
+        {hatzlDatenZeigenImmer2025}
+\bibfield{author}{\bibinfo{person}{Maximilian Hatzl}.}
+  \bibinfo{year}{2025}\natexlab{}.
+\newblock \bibinfo{title}{{Daten zeigen: Immer mehr Autos in Wien}}.
+\newblock
+  \bibinfo{howpublished}{https://www.wienerzeitung.at/a/daten-zeigen-immer-mehr-autos-in-wien}.
+\newblock
+
+
+\bibitem[Jaschinsky(2025)]%
+        {jaschinskyWarumOsterreichsStadte2025}
+\bibfield{author}{\bibinfo{person}{Katharina Jaschinsky}.}
+  \bibinfo{year}{2025}\natexlab{}.
+\newblock \bibinfo{title}{Warum {{\"Osterreichs St\"adte}} Eine Zeitgem\"a\ss e
+  {{Parkraumbewirtschaftung}} Brauchen - {{Mobilit\"at}} Mit {{Zukunft}}}.
+\newblock
+  \bibinfo{howpublished}{https://vcoe.at/blog/detail/warum-oesterreichs-staedte-eine-zeitgemaesse-parkraumbewirtschaftung-brauchen}.
+\newblock
+
+
+\bibitem[{Oviedo-Trespalacios} et~al\mbox{.}(2016)]%
+        {oviedo-trespalaciosUnderstandingImpactsMobile2016}
+\bibfield{author}{\bibinfo{person}{Oscar {Oviedo-Trespalacios}},
+  \bibinfo{person}{Md.~Mazharul Haque}, \bibinfo{person}{Mark King}, {and}
+  \bibinfo{person}{Simon Washington}.} \bibinfo{year}{2016}\natexlab{}.
+\newblock \showarticletitle{Understanding the Impacts of Mobile Phone
+  Distraction on Driving Performance: {{A}} Systematic Review}.
+\newblock \bibinfo{journal}{\emph{Transportation Research Part C: Emerging
+  Technologies}}  \bibinfo{volume}{72} (\bibinfo{date}{Nov.}
+  \bibinfo{year}{2016}), \bibinfo{pages}{360--380}.
+\newblock
+\showISSN{0968090X}
+\href{https://doi.org/10.1016/j.trc.2016.10.006}{doi:\nolinkurl{10.1016/j.trc.2016.10.006}}
+
+
+\bibitem[{Stadt Wien}(2026)]%
+        {stadtwienParkleitsystemFuerWien2026}
+\bibfield{author}{\bibinfo{person}{{Stadt Wien}}.}
+  \bibinfo{year}{2026}\natexlab{}.
+\newblock \bibinfo{title}{{Parkleitsystem f\"ur Wien}}.
+\newblock
+  \bibinfo{howpublished}{https://www.wien.gv.at/verkehr/parkleitsystem}.
+\newblock
+
+
+\bibitem[{Statistik Austria}(2026a)]%
+        {statistikaustria2025VielePkwNeuzulassungen2026}
+\bibfield{author}{\bibinfo{person}{{Statistik Austria}}.}
+  \bibinfo{year}{2026}\natexlab{a}.
+\newblock \bibinfo{booktitle}{\emph{{2025 so viele Pkw-Neuzulassungen wie seit
+  2019 nicht mehr}}}.
+\newblock \bibinfo{type}{{Pressemitteilung}} 14 089-008/26.
+  \bibinfo{institution}{Statistik Austria}, \bibinfo{address}{Wien}.
+  \bibinfo{pages}{4} pages.
+\newblock
+
+
+\bibitem[{Statistik Austria}(2026b)]%
+        {statistikaustriaKfzBestand2026}
+\bibfield{author}{\bibinfo{person}{{Statistik Austria}}.}
+  \bibinfo{year}{2026}\natexlab{b}.
+\newblock \bibinfo{title}{{Kfz-Bestand}}.
+\newblock
+  \bibinfo{howpublished}{https://www.statistik.at/statistiken/tourismus-und-verkehr/fahrzeuge/kfz-bestand}.
+\newblock
+
+
+\bibitem[{Statistik Austria}(2026c)]%
+        {statistikaustriaPkwBestand2025Um2026}
+\bibfield{author}{\bibinfo{person}{{Statistik Austria}}.}
+  \bibinfo{year}{2026}\natexlab{c}.
+\newblock \bibinfo{booktitle}{\emph{{Pkw-Bestand 2025 um 54 208 h\"oher als
+  2024}}}.
+\newblock \bibinfo{type}{{Pressemitteilung}} 14 117-036/26.
+  \bibinfo{institution}{Statistik Austria}, \bibinfo{address}{Wien}.
+  \bibinfo{pages}{3} pages.
+\newblock
+
+
+\end{thebibliography}

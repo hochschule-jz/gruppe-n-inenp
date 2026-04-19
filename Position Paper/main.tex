@@ -1,0 +1,66 @@
+\documentclass[nonacm]{acmart}
+
+%%
+%% \BibTeX command to typeset BibTeX logo in the docs
+\AtBeginDocument{%
+  \providecommand\BibTeX{{%
+    \normalfont B\kern-0.5em{\scshape i\kern-0.25em b}\kern-0.8em\TeX}}}
+
+%%
+%% These commands are for a JOURNAL article.
+%% PLEASE IGNORE THEM!
+\acmJournal{TOIT}
+\acmVolume{37}
+\acmNumber{4}
+\acmArticle{111}
+\acmMonth{8}
+
+%%
+%% end of the preamble, start of the body of the document source.
+\usepackage{textcomp}
+\usepackage{multirow}
+\usepackage{array}
+\usepackage{hyperref}
+\usepackage{csquotes}
+\usepackage[ngerman]{babel}
+\usepackage[nolist]{acronym}
+
+\newcolumntype{M}[1]{>{\centering\arraybackslash}m{#1}}
+\newcommand{\bla}{blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah}
+%Definition of Colors - Start
+\definecolor{xred}{RGB}{255,0,0}
+\definecolor{xblue}{RGB}{68,114,196}
+\definecolor{xgreen}{RGB}{0,176,80}
+\definecolor{xpurple}{RGB}{112,48,160}
+\definecolor{xorange}{RGB}{237,125,49}
+%Definition of Colors - End
+
+\setcopyright{none}
+\settopmatter{printacmref=false} % Removes citation information below abstract
+\renewcommand\footnotetextcopyrightpermission[1]{} % removes footnote with conference information in first column
+\pagestyle{plain}
+\begin{document}
+
+\input{section/title}
+\input{section/authors}
+\input{section/abstract}
+
+\maketitle
+
+\input{section/acronyms}
+
+\newpage
+\input{section/introduction}
+\newpage
+\input{section/related_work}
+\newpage
+\input{section/methodology}
+\newpage
+\input{section/conclusion}
+\newpage
+\input{section/references}
+
+\end{document}
+\endinput
+%%
+%% End of file `sample-acmlarge.tex'.
