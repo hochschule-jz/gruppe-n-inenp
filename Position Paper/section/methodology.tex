@@ -3,22 +3,69 @@
 %Deutsch
 \section{Methodischer Ansatz}
 
+% \subsection{Use Case}
+
+% Der betrachtete Use Case beschreibt eine Person, die mit dem privaten Kraftfahrzeug nach Wien fährt und ein Ziel in einem Gebiet mit begrenzter Parkplatzverfügbarkeit erreichen möchte. Während der Fahrt verwendet die Person ein Navigationssystem, das zunächst eine Route zum eigentlichen Ziel berechnet. Kurz vor dem Zielbereich wird jedoch deutlich, dass die Parkraumsituation unsicher ist. Klassische Navigationsdienste liefern in dieser Situation zwar eine Fahrtroute, aber keine verlässliche Entscheidungshilfe, welches Parkhaus oder welche Parkfläche aktuell sinnvoll wäre.
+
+% Drive & Decide erweitert diesen Ablauf um eine dynamische Entscheidungsunterstützung. Das System sammelt Belegungsdaten von ausgewählten Parkflächen und bereitet diese Daten in einer Cloud-Infrastruktur auf. Während der Navigation werden mögliche Parkoptionen nach Verfügbarkeit, Entfernung zum Ziel, erwarteter Restfahrzeit und optionalen Nutzerpräferenzen bewertet. Die fahrende Person muss dadurch nicht selbst mehrere Informationsquellen prüfen, sondern erhält einen konkreten Vorschlag.
+
+% Ein beispielhafter Ablauf könnte folgendermaßen aussehen: Die Nutzerin oder der Nutzer startet eine Fahrt zu einem Ziel in Wien. Das System beobachtet während der Anfahrt die aktuelle Parkplatzsituation in relevanten Parkhäusern oder Parkzonen. Sobald eine Entscheidung sinnvoll wird, schlägt Drive & Decide eine Parkoption vor. Die Person kann diesen Vorschlag bestätigen oder ablehnen. Bei Ablehnung wird eine alternative Parkmöglichkeit vorgeschlagen. Der Fokus liegt dabei nicht auf möglichst vielen Informationen, sondern auf einer reduzierten, entscheidungsorientierten Ausgabe.
+
+% \subsection{Technische Beschreibung des Prototypen}
+
+% Der Demonstrator soll die Grundidee eines IoT-basierten Smart-Parking-Systems prototypisch abbilden. Auf der Feldebene werden einzelne Parkplätze oder Parkplatzgruppen mit Sensoren ausgestattet. Für einen ersten Prototyp eignen sich beispielsweise Ultraschall- oder Infrarotsensoren, da sie einfach verfügbar und gut in Mikrocontroller-Setups integrierbar sind. Jeder Sensor erfasst, ob ein Stellplatz frei oder belegt ist. Die Sensordaten werden durch einen Mikrocontroller oder Einplatinencomputer verarbeitet und in regelmäßigen Abständen an das Backend übertragen.
+
+% Für die Kommunikation wird MQTT verwendet. MQTT eignet sich für IoT-Anwendungen, da es ein leichtgewichtiges Publish-Subscribe-Modell unterstützt. AWS IoT Core kann Geräteverbindungen über MQTT verwalten und Nachrichten über Topics empfangen oder verteilen. Zusätzlich können AWS-IoT-Regeln Nachrichten aus MQTT-Topic-Streams analysieren und an weitere AWS-Dienste weiterleiten, etwa an Lambda, DynamoDB oder SQS .
+
+% Die Backend-Architektur wird serverlos aufgebaut. Eingehende Sensordaten werden über AWS IoT Core empfangen und über Regeln an AWS Lambda weitergegeben. Lambda-Funktionen validieren die Daten, normalisieren unterschiedliche Sensorwerte und speichern den aktuellen Belegungsstatus. AWS Lambda eignet sich für diesen Ansatz, weil Funktionen ereignisgetrieben ausgeführt werden und keine dauerhaft betriebenen Server verwaltet werden müssen .
+
+% Die Anwendungsebene besteht aus einer einfachen Web- oder Mobile-Komponente. Diese Komponente muss nicht den vollständigen Funktionsumfang einer Navigations-App nachbauen. Für das Position Paper reicht ein Demonstrator, der Parkoptionen auf Basis von Echtzeitdaten bewertet und eine Empfehlung ausgibt. Die Bewertung kann zunächst regelbasiert erfolgen. Eine Parkoption erhält beispielsweise einen höheren Score, wenn viele Stellplätze frei sind, die Entfernung zum Ziel gering ist und die erwartete Zusatzfahrzeit niedrig bleibt.
+
+% Eine mögliche Bewertungslogik kann aus vier Faktoren bestehen: aktuelle Verfügbarkeit, Entfernung zum Ziel, Zusatzfahrzeit und Nutzerpräferenz. Die Nutzerpräferenz kann etwa „möglichst nahe am Ziel“, „möglichst günstiger Parkplatz“ oder „möglichst hohe Verfügbarkeit“ lauten. Für den ersten Prototyp wird keine komplexe KI benötigt. Stattdessen genügt ein nachvollziehbarer Scoring-Ansatz, der später erweitert werden kann.
+
+% \subsection{Datenfluss}
+
+% Der geplante Datenfluss lässt sich in fünf Schritte gliedern. Erstens erfassen Sensoren den Zustand einzelner Stellplätze. Zweitens sendet ein Mikrocontroller die Messwerte über MQTT an AWS IoT Core. Drittens verarbeitet eine Lambda-Funktion die eingehenden Nachrichten und speichert den aktuellen Zustand. Viertens berechnet eine weitere Funktion geeignete Parkempfehlungen auf Basis definierter Kriterien. Fünftens stellt die Anwendung der Nutzerin oder dem Nutzer eine konkrete Entscheidungsempfehlung bereit.
+
+% Die MQTT-Nachricht eines Sensors könnte beispielsweise folgende Informationen enthalten: Sensor-ID, Parkplatz-ID, Zeitstempel, Messwert und abgeleiteter Status. Der Status kann die Werte „frei“, „belegt“ oder „unbekannt“ annehmen. Der Status „unbekannt“ ist wichtig, weil Sensorfehler, Verbindungsprobleme oder unplausible Messwerte nicht als verlässliche Entscheidungsgrundlage behandelt werden sollten.
+
+% \subsection{Evaluation}
+
+% Die Evaluation soll zeigen, ob der vorgeschlagene Ansatz technisch umsetzbar ist und ob er einen Mehrwert gegenüber statischer Parkplatzinformation bietet. Dafür werden mehrere Metriken definiert. Die erste Metrik ist die Aktualität der Parkplatzdaten. Sie beschreibt die Zeit zwischen Sensorereignis und Verfügbarkeit der Information in der Anwendung. Diese Latenz ist entscheidend, weil veraltete Parkinformationen während der Fahrt schnell ihren Nutzen verlieren.
+
+% Die zweite Metrik ist die Korrektheit der Belegungserkennung. Sie beschreibt, wie zuverlässig ein Sensor zwischen freien und belegten Stellplätzen unterscheidet. Dazu können manuell erhobene Referenzdaten mit den Sensordaten verglichen werden. Relevante Kennzahlen sind Accuracy, False-Positive-Rate und False-Negative-Rate. Eine falsch als frei erkannte Parkmöglichkeit wäre besonders problematisch, weil sie direkt zu Fehlentscheidungen führen kann.
+
+% Die dritte Metrik ist die Qualität der Empfehlung. Diese kann anhand von simulierten Fahrsituationen bewertet werden. Dabei werden mehrere Parkoptionen mit unterschiedlichen Belegungsständen, Entfernungen und Fahrzeiten verglichen. Das System soll jene Option auswählen, die unter den gewählten Präferenzen den höchsten Nutzen bietet. Zusätzlich kann untersucht werden, wie stabil die Empfehlung bleibt, wenn sich Sensordaten kurzfristig ändern.
+
+% Die vierte Metrik betrifft die Interaktion. Da das Projekt aus der Problematik der Ablenkung während der Fahrt motiviert ist, soll die Anzahl notwendiger Nutzeraktionen möglichst gering sein. Bewertet werden kann, wie viele Eingaben erforderlich sind, um einen Vorschlag zu bestätigen oder eine Alternative zu wählen. Für den Demonstrator kann dies zunächst qualitativ analysiert werden. In einem späteren Final Paper könnte daraus eine kleine Nutzerstudie entstehen.
+
+% \subsection{Abgrenzung}
+
+% Der vorgeschlagene Ansatz ersetzt keine vollständige Navigationsplattform. Ebenso wird im ersten Schritt keine flächendeckende Parkraumerfassung für ganz Wien umgesetzt. Ziel ist ein fokussierter Demonstrator, der die technische Machbarkeit und das methodische Potenzial zeigt. Die Arbeit konzentriert sich daher auf einen begrenzten Parkbereich, eine prototypische Sensorintegration und eine nachvollziehbare Entscheidungslogik.
+
+% Diese Abgrenzung ist wichtig, weil das Position Paper keine fertige Produktlösung verspricht. Es motiviert vielmehr einen realistischen Weg, wie dynamische Parkinformationen in eine sichere, kontextabhängige Navigationsentscheidung überführt werden können. Der wissenschaftliche Beitrag liegt somit nicht in einem neuen Sensor allein, sondern in der Verbindung von IoT-Datenerfassung, Cloud-basierter Verarbeitung und ablenkungsarmer Entscheidungsunterstützung.
+
+
+
+
+
+
 %Englisch
 %\section{Methodological Approach}
 
-Dieses Kapitel ist das Herzstück eures Position Papers, wo ihr euren Lösungsansatz beschreibt. Je nach dem in welche Richtung euer Thema geht, kann dieses Kapitel auf unterschiedliche Arten aufgezogen werden. Folgende Informationen könnten (müssen jedoch nicht) Teil dieses Kapitels sein:
-\begin{itemize}
-	\item\textbf{Use Case Beschreibung}\\
-	In den meisten Fällen wird man als Startpunkt einen bestimmten Use Case haben, den man als Beispiel heranzieht bzw. den man im Zuge des Projektes bearbeiten möchte / wird. Der Use Case könnte sogar als Einstiegspunkt in die Thematik dienen, wo man die Problemstellung nochmal bildlich darstellt und auf Basis dessen den Lösungsansatz erklärt bzw. motiviert.
+% Dieses Kapitel ist das Herzstück eures Position Papers, wo ihr euren Lösungsansatz beschreibt. Je nach dem in welche Richtung euer Thema geht, kann dieses Kapitel auf unterschiedliche Arten aufgezogen werden. Folgende Informationen könnten (müssen jedoch nicht) Teil dieses Kapitels sein:
+% \begin{itemize}
+% 	\item\textbf{Use Case Beschreibung}\\
+% 	In den meisten Fällen wird man als Startpunkt einen bestimmten Use Case haben, den man als Beispiel heranzieht bzw. den man im Zuge des Projektes bearbeiten möchte / wird. Der Use Case könnte sogar als Einstiegspunkt in die Thematik dienen, wo man die Problemstellung nochmal bildlich darstellt und auf Basis dessen den Lösungsansatz erklärt bzw. motiviert.
 	
-	Die Use Case Beschreibung soll das \textit{\textbf{"WAS möchte man sich anschauen"}} darstellen und beschreiben.\\
+% 	Die Use Case Beschreibung soll das \textit{\textbf{"WAS möchte man sich anschauen"}} darstellen und beschreiben.\\
 		
-	\item\textbf{Technische Beschreibung eures Prototypen / eures Demonstrators}\\
-	Wenn man erklärt hat WAS man sich anschauen möchte, wäre die nächste Frage \textit{\textbf{"WIE möchte man es sich anschauen"}}. Dabei wäre eine technische Beschreibung de Veruchsaufbaus / Demonstrators sehr gut geeignet, wo man motiviert, WIE man vor hat die Problemstellung zu bearbeiten. Dieser Teil könnte sogar auf der Use Case Beschreibung aufbauen und die technische Ausführung des Use Cases erklären. 
+% 	\item\textbf{Technische Beschreibung eures Prototypen / eures Demonstrators}\\
+% 	Wenn man erklärt hat WAS man sich anschauen möchte, wäre die nächste Frage \textit{\textbf{"WIE möchte man es sich anschauen"}}. Dabei wäre eine technische Beschreibung de Veruchsaufbaus / Demonstrators sehr gut geeignet, wo man motiviert, WIE man vor hat die Problemstellung zu bearbeiten. Dieser Teil könnte sogar auf der Use Case Beschreibung aufbauen und die technische Ausführung des Use Cases erklären. 
 	
-	\item\textbf{Beschreibung was ihr messen / evaluieren / vergleichen / analysieren werdet}\\
-	Je nach dem in welchem Themengebiet man unterwegs ist und welche Problemstellung man bearbeitet, wird man unterschiedliche methodische Ansätze verwenden können. Hier geht es vor allem darum zu erklären, welchen Ansatz man wählt um die Problemstellung zu bearbeiten und in welcher Art und Weise man vor hat Daten zu sammeln bzw. Ergebnisse zu erzielen, um das Problem zu bearbeiten / zu lösen. Ein wichtiger Aspekt cabei könnte sein welche Metriken man vor hat zu verwenden, damit man Daten sammeln bzw. Ergebnisse erzielen kann, die zeigen, WIE man die Problemstellung tatsächlich löst.
-\end{itemize}
+% 	\item\textbf{Beschreibung was ihr messen / evaluieren / vergleichen / analysieren werdet}\\
+% 	Je nach dem in welchem Themengebiet man unterwegs ist und welche Problemstellung man bearbeitet, wird man unterschiedliche methodische Ansätze verwenden können. Hier geht es vor allem darum zu erklären, welchen Ansatz man wählt um die Problemstellung zu bearbeiten und in welcher Art und Weise man vor hat Daten zu sammeln bzw. Ergebnisse zu erzielen, um das Problem zu bearbeiten / zu lösen. Ein wichtiger Aspekt cabei könnte sein welche Metriken man vor hat zu verwenden, damit man Daten sammeln bzw. Ergebnisse erzielen kann, die zeigen, WIE man die Problemstellung tatsächlich löst.
+% \end{itemize}
 
-\textbf{VORGABE}: dieses Kapitel soll nicht mehr 3 A4-Seiten benötigen
+% \textbf{VORGABE}: dieses Kapitel soll nicht mehr 3 A4-Seiten benötigen
 
