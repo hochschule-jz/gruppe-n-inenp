@@ -3,58 +3,10 @@
 %Deutsch
 \section{Schlussfolgerungen und Ausblick}\label{sec:conclusion}
 
-% Dieses Position Paper bewegt sich im Forschungsfeld intelligenter Verkehrssysteme, Smart Parking und IoT-basierter Smart-City-Anwendungen. Ausgangspunkt ist die zunehmende Belastung urbaner Verkehrsräume durch steigende Motorisierung, Pendelverkehr und begrenzte Parkflächen. Die Parkplatzsuche wird dadurch zu einem praktischen Problem für Fahrerinnen und Fahrer sowie zu einem infrastrukturellen Problem für Städte.
+Der anhaltende Trend steigender Motorisierung erhöht den Druck auf städtische Infrastrukturen durch vermeidbaren Suchverkehr kontinuierlich und rückt technologische Lösungsansätze wie \ac{iot}-basierte \acp{sps} und serverlose Cloud-Architekturen in den Mittelpunkt. Für Parkhausbetreiber stellt sich angesichts des wachsenden Wettbewerbsdrucks zur effizienteren Auslastung ihrer Stellplätze dabei die zentrale Frage der wirtschaftlichen Sinnhaftigkeit: Können die notwendigen Investitionen in Sensorik und Cloud-Infrastruktur eines \ac{sps} durch den erwarteten wirtschaftlichen Nutzen gerechtfertigt werden? Die Diskussion verschiebt sich damit von der technischen Machbarkeit hin zur Suche nach belastbaren Kennzahlen für eine fundierte Investitionsentscheidung.
 
-% Die zentrale Problemstellung besteht darin, dass aktuelle Navigationssysteme zwar Routen berechnen, aber Parkentscheidungen häufig nicht dynamisch genug unterstützen. Fahrerinnen und Fahrer müssen dadurch zusätzliche Informationen suchen, vergleichen und bewerten. Gerade während der Fahrt entsteht dadurch ein Spannungsfeld zwischen Informationsbedarf und Verkehrssicherheit.
+Um diese Lücke zu adressieren, stellt Drive \& Decide einen methodischen Ansatz vor, der auf einem prototypischen, \ac{iot}-basierten \ac{sps} mit einer serverlosen Architektur auf \ac{aws} aufbaut. Der Versuchsaufbau kombiniert ein 3D-gedrucktes Modell einer Parkgarage mit einer Cloud-Anbindung über \ac{mqtt}, \ac{aws} \ac{iot} Core, \ac{aws} Lambda und Amazon DynamoDB. Auf Basis dieses Prototyps wird ein Kosten-Nutzen-Modell aus Sicht eines Parkhausbetreibers entwickelt. Dieses stellt einmalige Investitionskosten (\ac{capex}) und laufende, nutzungsabhängige Cloud-Kosten (\ac{opex}) dem potenziellen Mehrerlös gegenüber.
 
-% Drive & Decide schlägt hierfür einen prototypischen Lösungsansatz vor. Sensoren erfassen die aktuelle Belegung ausgewählter Parkplätze. Die Daten werden über MQTT an AWS IoT Core übertragen, durch Lambda-Funktionen verarbeitet und in eine Entscheidungsempfehlung überführt. Nutzerinnen und Nutzer erhalten dadurch nicht bloß Rohdaten, sondern einen konkreten Vorschlag für eine geeignete Parkoption.
+Die wichtigsten Erkenntnisse dieses Papers sind, dass die Investition in ein \ac{sps} zwingend auf Kennzahlen wie \ac{tco}, \ac{roi} und dem Break-Even-Punkt basieren muss. Der durchgehend ereignisgetriebene Aufbau über serverlose Dienste ist dabei eine wesentliche Voraussetzung, um die laufenden Cloud-Kosten (\ac{opex}) belastbar zu erfassen und eine realistische Einschätzung der wirtschaftlichen Rentabilität zu ermöglichen.
 
-% Der wichtigste Gedanke des Papers ist, dass Smart Parking nicht bei der Erkennung freier Stellplätze enden sollte. Entscheidend ist, wie diese Information während der Fahrt in eine sichere, einfache und kontextabhängige Entscheidung übersetzt wird. Der Mehrwert liegt daher in der Verbindung von Echtzeitdaten, Cloud-Verarbeitung, Präferenzmodellierung und reduzierter Interaktion.
-
-% Als nächster Schritt soll der Demonstrator technisch umgesetzt und anhand definierter Metriken evaluiert werden. Dazu gehören Latenz, Sensorgenauigkeit, Empfehlungsqualität und Interaktionsaufwand. Für das Final Paper kann der Prototyp anschließend erweitert werden, etwa durch zusätzliche Parkoptionen, eine einfache Prognosekomponente oder eine kleine Nutzerstudie zur Wahrnehmung der Entscheidungsvorschläge.
-
-
-
-
-
-
-
-
-%Englisch
-%\section{Conclusion and Future Work}
-
-% Mit dem letzten Kapitel schließt das Position Paper ab und sollte im Idealfall folgende Informationen beinhalten:
-% \begin{itemize}
-% 	\item Erinnert den Leser / die Leserin in welchem Universum / Forschungsfeld das Position Paper ist
-% 	\item Erinnert den Leser / die Leserin was die Problemstellung in diesem Universum / Forschungsfeld
-% 	\item Erinnert den Leser / die Leserin an die vorgeschlagene Herangehensweise aus Kapitel 3, wie ihr vor habt diese Problemstellung zu bearbeiten
-% 	\item gebt dem Leser / der Leserin die wichtigesten Key-Points eures Papers mit (bevor sie aufhören zu lesen), so dass sie sich "ewig" daran erinnern bzw. eure Ideen weitererzählen
-% 	\item gebt dem Leser / der Leserin einen Ausblick (Future Work) was ihr als nächstes tun werdet (einen Vorgeschmack auf das Final Paper)
-% \end{itemize}
-
-% \vspace{10pt}
-% \textbf{VORGABE}: dieses Kapitel soll nicht mehr als eine A4-Seite benötigen
-
-% \vspace{10pt}
-% Hier noch ein paar Position Paper (Beispiel) and denen ihr euch orientieren könnt:
-% \begin{itemize}
-% 	\item\textbf{\textit{Paper \cite{ref01}}:} \\
-% 	      Igor Ivki\'c, Andreas Mauthe, and Markus Tauber. (2019).
-% 	      \textit{"Towards a Security Cost Model for Cyber-Physical Systems"}. In Proceedings of the 16th Annual Consumer Communications \& Networking Conference (CCNS).
-% 	      IEEE.\\
-% 	      \textbf{Beschreibung:} soll als Vorlage dienen, wie ein Position Paper aufgebaut sein kann\\
-% 	      \textbf{Link:} \href{https://arxiv.org/pdf/1905.06124.pdf}{https://arxiv.org/pdf/1905.06124.pdf}\\
-% 	\item\textbf{\textit{Paper \cite{ref02}}:} \\
-% 	      Igor Ivki\'c, Harald Pichler, Mario Zsilak, Andreas Mauthe, and Markus Tauber. (2019).
-% 	      \textit{“A Framework for Measuring the Costs of Security at Runtime”}.
-% 	      In Proceedings of the 9th International Conference on Cloud Computing and Services Science (CLOSER).\\
-% 	      \textbf{Beschreibung:} soll als Vorlage dienen, wie ein Position Paper aufgebaut sein kann. \\
-% 	      \textbf{Link:} \href{https://arxiv.org/pdf/1905.11180.pdf}{https://arxiv.org/pdf/1905.11180.pdf}\\
-
-% 	\item\textbf{\textit{Paper \cite{ref03}}:} \\
-% 	      Igor Ivki\'c, Patrizia Sailer, Antonios Gouglidis, Andreas Mauthe, and Markus Tauber. (2021).
-% 	      \textit{"A Security Cost Modelling Framework for Cyber- Physical Systems"}.
-% 	      ACM Transactions on Internet Technology (TOIT).\\
-% 	      \textbf{Beschreibung:} soll als Vorlage dienen, wie man ein Related Work Kapitel aufziehen kann. Dieses Paper ist ein Journal-Artikel und untersucht ein Thema in der Tiefe. Im Vergleich dazu soll bei einem Position Paper ein neues Thema motiviert werden und der Anreiz geschaffen werden, dass es wichtig wäre, dies genauer zu untersuchen. \\
-% 	      \textbf{Link:} \href{https://arxiv.org/pdf/2107.07784.pdf}{https://arxiv.org/pdf/2107.07784.pdf}\\
-% \end{itemize}
+Als Ausblick auf das Final Paper und die nächsten Arbeitsschritte wird der vorgestellte Versuchsaufbau physisch und virtuell umgesetzt. Das 3D-gedruckte Modell der Parkgarage wird mit Sensoren und Matchbox-Fahrzeugen ausgestattet, während parallel das \ac{aws}-Backend vollständig konfiguriert wird. Ziel ist es, anhand realer Messwerte und lastabhängiger Cloud-Kosten das entwickelte Kosten-Nutzen-Modell quantitativ zu evaluieren und Parkhausbetreibern eine empirisch fundierte Entscheidungsgrundlage zu liefern.
