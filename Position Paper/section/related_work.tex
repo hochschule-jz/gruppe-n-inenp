@@ -5,13 +5,6 @@
 
 % Definition SMART Parking und Komponenten
 
-% \acp{sps} werden in der Forschung meist als Teil intelligenter Verkehrssysteme und Smart-City-Infrastrukturen betrachtet. Ziel solcher Systeme ist es, Parksuchverkehr und daraus folgende Probleme zu reduzieren, freie Stellplätze schneller auffindbar zu machen und vorhandene Parkflächen effizienter zu nutzen. Übersichtsstudien zeigen, dass \acp{sps}-Lösungen üblicherweise aus mehreren Komponenten bestehen:
-% (1) einem Physical Layer mit Sensoren zur Detektion eines Fahrzeuges,
-% (2) einem Transaction Layer zur Aufbereitung und Übertragung der Daten, 
-% (3) einem Network Layer zur Speicherung und weiteren Verarbeitung der Daten und 
-% (4) einem Application Layer zur Interaktion mit dem \ac{sps} \citep{rajSmartParkingSystems2024}.
-% Smart Parking wird dementsprechend als System beschrieben, das Parkraumverfügbarkeit überwacht und diese Information über \ac{iot}-Anwendungen bereitstellt. Typische Technologien sind Sensorik, drahtlose Netzwerke, Web- oder Smartphone-Anwendungen und zunehmend Verfahren des maschinellen Lernens \citep{fahimSmartParkingSystems2021}{rajSmartParkingSystems2024}. 
-
 Aktuelle \ac{sps} werden zunehmend als \ac{iot}-basierte Smart-City-Systeme verstanden. Ziel solcher Systeme ist es, Parksuchverkehr und daraus folgende Probleme zu reduzieren, freie Stellplätze schneller auffindbar zu machen und vorhandene Parkflächen effizienter zu nutzen. Sie verbinden Sensorik, Kommunikationsstandards, Datenverarbeitung und nutzerseitige Anwendungen zu einer mehrschichtigen Architektur. \citet{rajSmartParkingSystems2024} ordnen modernste \ac{sps} in das Zeitalter des \enquote{Parking 4.0} ein und gliedern übliche Architekturen in mehrere Ebenen: 
 (1) in einen Physical Layer mit Sensoren zur Detektion eines Fahrzeuges,
 (2) einen Transaction Layer zur Aufbereitung und Übertragung der Daten, 
@@ -19,19 +12,20 @@ Aktuelle \ac{sps} werden zunehmend als \ac{iot}-basierte Smart-City-Systeme vers
 (4) einen Application Layer zur Interaktion mit dem \ac{sps} \citep{rajSmartParkingSystems2024}.
 \citet{alamSurveyIoTDriven2023} geben dazu einen Überblick über \ac{iot}-getriebene Smart-Parking-Management-Systeme und betrachten Ansätze, Technologien, Komponenten, Kommunikationsstandards und Sicherheitsfragen \citep{alamSurveyIoTDriven2023}.\citet{fahimSmartParkingSystems2021} zeigen in ihrer Übersichtsstudie, dass \ac{sps} nach technologischen Ansätzen, eingesetzten Sensoren, Netzwerktechnologien, User Interfaces, Rechenansätzen und bereitgestellten Services analysiert werden können \citep{fahimSmartParkingSystems2021}.
 
-% (1) einer Feldebene mit Sensoren, 
-% (2) einer Daten- bzw. Cloud-Plattform und 
-% (3) einer Anwendungsebene für Personen, die mit dem System interagieren. 
+Studien rund um \acp{sps} teilen sich mehrere Forschungsgebiete. Ein wesentlicher Teil beschäftigt sich mit der Echtzeiterfassung der Parkplatzbelegung. Ältere Arbeiten verwenden dafür unterschiedliche Technologien, darunter meist \ac{ir}- und akustische Sensoren sowie Kameras und Induktionsschleifen \citep{fahimSmartParkingSystems2021}. \citet{perkovicSmartParkingSensors2020} untersuchen diesbezüglich die Leistungsfähigkeit üblicher Smart-Parking-Sensoren, dazugehörige Funknetzprotokolle und Optimierungsmöglichkeiten \citep{perkovicSmartParkingSensors2020}. Aktuellere Studien rücken den Einsatz von \ac{ml} sowie Edge- und Fog-Computing nahe der Datenquelle in den Vordergrund, um geringere Latenzen und eine bessere Ressourcennutzung zu erzielen \citep{alaanzyRealTimeSmart2025}{kimRealTimeParkingSpace2025}. 
 
-% Bestehende Forschungsgebiete (Parkplatzbelegung)
-
-% Ein zentrales Forschungsfeld ist die Echtzeiterfassung der Parkplatzbelegung. Während ältere Arbeiten vor allem verschiedene Sensortypen und Detektionsverfahren vergleichen, rücken aktuelle Ansätze die schnelle Verarbeitung der Belegungsdaten stärker in den Vordergrund. Ala’anzy et al. schlagen ein fog-computing-basiertes Smart-Parking-System vor, das Parkdaten lokal verarbeitet und Echtzeitaktualisierungen bereitstellt. Dadurch sollen Suchzeiten reduziert und die Nutzungserfahrung verbessert werden. Ergänzend zeigen aktuelle Embedded- und KI-basierte Ansätze, dass die Erkennung freier Stellplätze zunehmend direkt an oder nahe der Datenquelle erfolgen kann. Für Drive & Decide ist diese Forschung relevant, weil die Qualität der späteren Entscheidungsempfehlung unmittelbar von Aktualität und Zuverlässigkeit der Belegungsdaten abhängt.
-
-Studien rund um \acp{sps} teilen sich mehrere Forschungsgebiete. Ein wesentlicher Teil beschäftigt sich mit der Echtzeiterfassung der Parkplatzbelegung. Ältere Arbeiten verwenden dafür unterschiedliche Technologien, darunter meist \ac{IR}- und akustische Sensoren sowie Kameras und Induktionsschleifen \citep{fahimSmartParkingSystems2021}. \citet{perkovicSmartParkingSensors2020} untersuchen diesbezüglich die Leistungsfähigkeit üblicher Smart-Parking-Sensoren, dazugehörige Funknetzprotokolle und Optimierungsmöglichkeiten \citep{perkovicSmartParkingSensors2020}. Aktuellere Studien rücken den Einsatz von \ac{ml} sowie Edge- und Fog-Computing nahe der Datenquelle in den Vordergrund, um geringere Latenzen und eine bessere Ressourcennutzung zu erzielen \citep{alaanzyRealTimeSmart2025}{kimRealTimeParkingSpace2025}.
+% \citet{nooripourSmartParkingSystems2024} und \citet{rajSmartParkingSystems2024} weisen bei der Datengewinnung unterdessen auf Herausforderungen hin, die von Umwelteinflüssen wie Witterung, über Instandhaltungskosten bis zu rechtlichen Bedenken reichen \citep{nooripourSmartParkingSystems2024}{rajSmartParkingSystems2024}. 
 
 % Bestehende Forschungsgebiete (Leitsysteme)
 
-Neben der Erfassung freier Stellplätze untersucht die Forschung außerdem, wie Parkinformationen in Routing- und Entscheidungsprozesse integriert werden können. \citet{hassineDynamicPricingRoute2024} schlagen ein Multi-Agent-System mit dynamischer Preisgestaltung und Routenführung vor, um Parkraumnachfrage und Angebot besser abzustimmen und Suchverkehr zu reduzieren. So können beispielsweise Hotspots durch alternative Parkplätze in der Nähe entlastet werden \citep{hassineDynamicPricingRoute2024}.
+Neben der Erfassung freier Stellplätze untersucht die Forschung außerdem, wie Parkinformationen in Routing- und Entscheidungsprozesse integriert werden können. \citet{hassineDynamicPricingRoute2024} schlagen ein Multi-Agent-System mit dynamischer Preisgestaltung und Routenführung vor, um Parkraumnachfrage und Angebot besser abzustimmen und Suchverkehr zu reduzieren. So können beispielsweise Hotspots besonders in Spitzenzeiten durch alternative Parkplätze in der Nähe entlastet werden \citep{hassineDynamicPricingRoute2024}. Um bei der Parkplatzwahl optimale Vorschläge auf Basis der aktuellen Position und Präferenzen geben zu können, berücksichtigen \citet{icarte-ahamudaMultiAgentSystemParking2025} teilweise Kriterien wie
+(1) Nähe zur Destination, 
+(2) Kosten, 
+(3) Sicherheit, 
+(4) Verkehrsfluss, 
+(5) Fahrzeug-Eigenschaften sowie
+(6) Parkplatzfeatures \citep{icarte-ahumadaMultiAgentSystemParking2025}. 
+% \citet{amariNewParkingLot2023} erweitern diese noch um (7) Physische Gegebenheiten der Person / Gesundheitsdaten \citep{amariNewParkingLot2023}.
 
 % Bestehende Forschungsgebiete (Prognose- und Optimierung)
 
@@ -39,11 +33,11 @@ Neben der Erfassung freier Stellplätze untersucht die Forschung außerdem, wie 
 
 % Bestehende Forschungsgebiete (Ablenkung während der Fahrt)
 
-
+Multifunktionale Tools wie das Smartphone bieten eine Alternative zu verbauten Navigationsgeräten und ermöglichen eine dynamische Navigation, um die gewünschte Destination zu erreichen \acp{sps}. \citet{oviedo-trespalaciosUnderstandingImpactsMobile2016} zeigen in ihrer Übersichtsstudie, dass mobile Telefonnutzung während der Fahrt unter anderem Reaktionszeit, visuelle Aufmerksamkeit, Spurhaltung und Fahrzeugkontrolle negativ beeinflussen können \citep{oviedo-trespalaciosUnderstandingImpactsMobile2016}. \citet{fancelloAnalysisVisualDistraction2025} fokussieren ihre Studie explizit auf visuelle Ablenkung durch Smartphone-Nutzung beim Fahren. Aufgaben wie das Lesen und Schreiben von Nachrichten erfordern die höchste Aufmerksamkeit, weshalb vereinfachte Benutzeroberflächen an Bedeutung gewinnen \citep{fancelloAnalysisVisualDistraction2025}{khanDesignContextAwareAdaptive2020}.
 
 % Projekt-Delta / kurze Reflexion der vorherigen Absätze / Plan für die vorgestellte Studie
 
-
+Zusammenfassend zeigt die Literatur, dass Smart-Parking-Systeme bereits zahlreiche Einzelaspekte adressieren. Sensorbasierte Systeme erfassen freie Stellplätze, Fog- und Edge-Ansätze verbessern die Echtzeitverarbeitung, und Optimierungsverfahren unterstützen die Auswahl geeigneter Parkoptionen. Gleichzeitig zeigen Arbeiten zur Fahrerablenkung, dass zusätzliche mobile Interaktion während der Fahrt sicherheitskritisch sein kann. Die Forschungslücke liegt daher weniger in der bloßen Erkennung freier Parkplätze, sondern in der Verbindung von Echtzeit-Parkdaten, dynamischer Navigationsentscheidung, individuellen Präferenzen und reduzierter Interaktion. Drive \& Decide positioniert sich genau in diesem Zwischenraum, indem Parkinformationen nicht nur bereitgestellt, sondern in eine ablenkungsarme Entscheidungsempfehlung während der Zielführung überführt werden.
 
 
 

@@ -1,14 +1,14 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.26 (TeX Live 2024) (preloaded format=pdflatex 2025.1.1)  19 APR 2026 13:30
+This is pdfTeX, Version 3.141592653-2.6-1.40.26 (TeX Live 2024) (preloaded format=pdflatex 2025.2.1)  3 MAY 2026 18:33
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
  %&-line parsing enabled.
 **main.tex
 (./main.tex
-LaTeX2e <2024-11-01> patch level 1
-L3 programming layer <2024-12-09>
+LaTeX2e <2024-11-01> patch level 2
+L3 programming layer <2025-01-18>
 (/opt/texlive/texdir/texmf-dist/tex/latex/acmart/acmart.cls
-Document Class: acmart 2024/12/07 v2.11 Typesetting articles for the Associatio
+Document Class: acmart 2024/12/28 v2.12 Typesetting articles for the Associatio
 n for Computing Machinery
 (/opt/texlive/texdir/texmf-dist/tex/latex/xkeyval/xkeyval.sty
 Package: xkeyval 2022/06/16 v2.9 package option processing (HA)
@@ -233,10 +233,6 @@ Package: trimspaces 2009/09/17 v1.1 Trim spaces around a token list
 ))
 (/opt/texlive/texdir/texmf-dist/tex/latex/setspace/setspace.sty
 Package: setspace 2022/12/04 v6.7b set line spacing
-)
-(/opt/texlive/texdir/texmf-dist/tex/latex/textcase/textcase.sty
-Package: textcase 2023/07/27 v1.04 Text only upper/lower case changing (DPC)
-Package textcase Info: Defining Legacy names on input line 20.
 )
 \@ACM@acmcp@delta=\dimen167
 
@@ -672,10 +668,10 @@ Package: float 2001/11/08 v1.3d Float enhancements (AL)
 \@ACM@badge@width=\skip64
 \@ACM@title@width=\skip65
 \@ACM@badge@skip=\skip66
-Class acmart Info: Printing CCS on input line 1805.
-Class acmart Info: Printing bibformat on input line 1805.
-Class acmart Info: Printing folios on input line 1807.
-Class acmart Info: Setting authorsperrow to 0 on input line 1815.
+Class acmart Info: Printing CCS on input line 1806.
+Class acmart Info: Printing bibformat on input line 1806.
+Class acmart Info: Printing folios on input line 1808.
+Class acmart Info: Setting authorsperrow to 0 on input line 1816.
 
 (/opt/texlive/texdir/texmf-dist/tex/latex/comment/comment.sty
 \CommentStream=\write3
@@ -690,36 +686,42 @@ Excluding comment 'comment') Excluding comment 'CCSXML'
 \author@bx@sep=\skip67
 
 (/opt/texlive/texdir/texmf-dist/tex/latex/fancyhdr/fancyhdr.sty
-Package: fancyhdr 2024/12/09 v4.5 Extensive control of page headers and footers
-
+Package: fancyhdr 2025/01/07 v5.1.1 Extensive control of page headers and foote
+rs
 \f@nch@headwidth=\skip68
-\f@nch@O@elh=\skip69
-\f@nch@O@erh=\skip70
-\f@nch@O@olh=\skip71
-\f@nch@O@orh=\skip72
-\f@nch@O@elf=\skip73
-\f@nch@O@erf=\skip74
-\f@nch@O@olf=\skip75
-\f@nch@O@orf=\skip76
+\f@nch@offset@elh=\skip69
+\f@nch@offset@erh=\skip70
+\f@nch@offset@olh=\skip71
+\f@nch@offset@orh=\skip72
+\f@nch@offset@elf=\skip73
+\f@nch@offset@erf=\skip74
+\f@nch@offset@olf=\skip75
+\f@nch@offset@orf=\skip76
+\f@nch@height=\skip77
+\f@nch@footalignment=\skip78
+\f@nch@widthL=\skip79
+\f@nch@widthC=\skip80
+\f@nch@widthR=\skip81
+\@temptokenb=\toks40
 )
 Special comment 'acks'
 LaTeX Font Info:    Trying to load font information for T1+LinuxLibertineT-TLF 
-on input line 3584.
+on input line 3588.
 
 (/opt/texlive/texdir/texmf-dist/tex/latex/libertine/T1LinuxLibertineT-TLF.fd
 File: T1LinuxLibertineT-TLF.fd 2017/03/20 (autoinst) Font definitions for T1/Li
 nuxLibertineT-TLF.
 )
 LaTeX Font Info:    Font shape `T1/LinuxLibertineT-TLF/m/n' will be
-(Font)              scaled to size 9.0pt on input line 3584.
+(Font)              scaled to size 9.0pt on input line 3588.
 )
 Class acmart Info: Using journal code toit on input line 12.
 
 (/opt/texlive/texdir/texmf-dist/tex/latex/multirow/multirow.sty
 Package: multirow 2024/11/12 v2.9 Span multiple rows of a table
-\multirow@colwidth=\skip77
+\multirow@colwidth=\skip82
 \multirow@cntb=\count321
-\multirow@dima=\skip78
+\multirow@dima=\skip83
 \bigstrutjot=\dimen194
 )
 (/opt/texlive/texdir/texmf-dist/tex/latex/tools/array.sty
@@ -727,9 +729,9 @@ Package: array 2024/10/17 v2.6g Tabular extension package (FMi)
 \col@sep=\dimen195
 \ar@mcellbox=\box62
 \extrarowheight=\dimen196
-\NC@list=\toks40
-\extratabsurround=\skip79
-\backup@length=\skip80
+\NC@list=\toks41
+\extratabsurround=\skip84
+\backup@length=\skip85
 \ar@cellbox=\box63
 )
 (/opt/texlive/texdir/texmf-dist/tex/latex/csquotes/csquotes.sty
@@ -740,7 +742,7 @@ Package: csquotes 2024-04-04 v5.2o context-sensitive quotations (JAW)
 \csq@qlevel=\count325
 \csq@maxlvl=\count326
 \csq@tshold=\count327
-\csq@ltx@everypar=\toks41
+\csq@ltx@everypar=\toks42
 
 (/opt/texlive/texdir/texmf-dist/tex/latex/csquotes/csquotes.def
 File: csquotes.def 2024-04-04 v5.2o csquotes generic definitions (JAW)
@@ -752,11 +754,11 @@ Package csquotes Info: ... configuration file loaded successfully.
 File: csquotes.cfg 
 ))
 (/opt/texlive/texdir/texmf-dist/tex/generic/babel/babel.sty
-Package: babel 2024/12/21 v24.15 The multilingual framework for pdfLaTeX, LuaLa
-TeX and XeLaTeX
+Package: babel 2025/01/25 v25.2 The multilingual framework for pdfLaTeX, LuaLaT
+eX and XeLaTeX
 \babel@savecnt=\count328
 \U@D=\dimen197
-\l@unhyphenated=\language89
+\l@unhyphenated=\language90
 
 (/opt/texlive/texdir/texmf-dist/tex/generic/babel/txtbabel.def)
 \bbl@readstream=\read3
@@ -776,12 +778,12 @@ Package babel Info: Importing font and identification data for ngerman
 (babel)             from babel-de.ini. Reported on input line 11.
 )
 (/opt/texlive/texdir/texmf-dist/tex/latex/acronym/acronym.sty
-Package: acronym 2024/03/30 v1.49 Support for acronyms (Tobias Oetiker)
+Package: acronym 2025/01/17 v1.50 Support for acronyms (Tobias Oetiker)
 
 (/opt/texlive/texdir/texmf-dist/tex/latex/bigfoot/suffix.sty
 Package: suffix 2006/07/15 1.5a Variant command support
 )
-\AC@clearlist=\toks42
+\AC@clearlist=\toks43
 )
 Class acmart Info: Suppressing bibformat on input line 39.
 Package hyperref Info: Option `pdfdisplaydoctitle' set `true' on input line 42.
@@ -890,7 +892,7 @@ File: umsb.fd 2013/01/14 v3.01 AMS symbols B
 LaTeX Font Info:    Trying to load font information for U+ntxmia on input line 
 42.
 
-(/opt/texlive/texdir/texmf-dist/tex/latex/gelasiomath/untxmia.fd
+(/opt/texlive/texdir/texmf-dist/tex/latex/newtx/untxmia.fd
 File: untxmia.fd 2024/04/09 Fontinst v1.933 font definitions for U/ntxmia.
 )
 LaTeX Font Info:    Font shape `U/ntxmia/m/it' will be
@@ -958,12 +960,12 @@ Package hyperref Info: Link coloring OFF on input line 42.
 \scratchbox=\box65
 \nofMPsegments=\count333
 \nofMParguments=\count334
-\everyMPshowfont=\toks43
+\everyMPshowfont=\toks44
 \MPscratchCnt=\count335
 \MPscratchDim=\dimen199
 \MPnumerator=\count336
 \makeMPintoPDFobject=\count337
-\everyMPtoPDFconversion=\toks44
+\everyMPtoPDFconversion=\toks45
 ) (/opt/texlive/texdir/texmf-dist/tex/latex/epstopdf-pkg/epstopdf-base.sty
 Package: epstopdf-base 2020-01-24 v2.11 Base part for package epstopdf
 
@@ -1141,92 +1143,91 @@ although it is yet undefined on input line 24.
 )
 
 [2.2] (./section/related_work.tex
-LaTeX Font Info:    Font shape `OT1/LinuxLibertineT-TLF/m/n' will be
-(Font)              scaled to size 9.0pt on input line 22.
-LaTeX Font Info:    Font shape `OT1/LinuxLibertineT-TLF/m/n' will be
-(Font)              scaled to size 6.6pt on input line 22.
-LaTeX Font Info:    Font shape `OML/nxlmi/m/it' will be
-(Font)              scaled to size 9.0pt on input line 22.
-LaTeX Font Info:    Font shape `OML/nxlmi/m/it' will be
-(Font)              scaled to size 6.6pt on input line 22.
-LaTeX Font Info:    Font shape `LMS/ntxsy/m/n' will be
-(Font)              scaled to size 9.0pt on input line 22.
-LaTeX Font Info:    Font shape `LMS/ntxsy/m/n' will be
-(Font)              scaled to size 6.6pt on input line 22.
-LaTeX Font Info:    Font shape `LMX/ntxexx/m/n' will be
-(Font)              scaled to size 9.0pt on input line 22.
-LaTeX Font Info:    Font shape `LMX/ntxexx/m/n' will be
-(Font)              scaled to size 6.6pt on input line 22.
-LaTeX Font Info:    Font shape `U/ntxmia/m/it' will be
-(Font)              scaled to size 9.0pt on input line 22.
-LaTeX Font Info:    Font shape `U/ntxmia/m/it' will be
-(Font)              scaled to size 6.6pt on input line 22.
-LaTeX Font Info:    Font shape `U/ntxsym/m/n' will be
-(Font)              scaled to size 9.0pt on input line 22.
-LaTeX Font Info:    Font shape `U/ntxsym/m/n' will be
-(Font)              scaled to size 6.6pt on input line 22.
-LaTeX Font Info:    Font shape `U/ntxsyc/m/n' will be
-(Font)              scaled to size 9.0pt on input line 22.
-LaTeX Font Info:    Font shape `U/ntxsyc/m/n' will be
-(Font)              scaled to size 6.6pt on input line 22.
-LaTeX Font Info:    Font shape `U/ntxexa/m/n' will be
-(Font)              scaled to size 9.0pt on input line 22.
-LaTeX Font Info:    Font shape `U/ntxexa/m/n' will be
-(Font)              scaled to size 6.6pt on input line 22.
+Package acronym Info: Label `acro:sps' newly defined as it shall be overridden
+although it is yet undefined on input line 8.
 LaTeX Font Info:    Font shape `T1/LinuxLibertineT-TLF/b/n' will be
-(Font)              scaled to size 9.0pt on input line 33.
+(Font)              scaled to size 9.0pt on input line 8.
+
+
+Package natbib Warning: Citation `rajSmartParkingSystems2024' on page 3 undefin
+ed on input line 8.
+
+
+Package natbib Warning: Citation `rajSmartParkingSystems2024' on page 3 undefin
+ed on input line 12.
+
+
+Package natbib Warning: Citation `alamSurveyIoTDriven2023' on page 3 undefined 
+on input line 13.
+
+
+Package natbib Warning: Citation `alamSurveyIoTDriven2023' on page 3 undefined 
+on input line 13.
+
+
+Package natbib Warning: Citation `fahimSmartParkingSystems2021' on page 3 undef
+ined on input line 13.
+
+
+Package natbib Warning: Citation `fahimSmartParkingSystems2021' on page 3 undef
+ined on input line 13.
+
+Package acronym Info: Label `acro:ir' newly defined as it shall be overridden
+although it is yet undefined on input line 15.
+
+Package natbib Warning: Citation `fahimSmartParkingSystems2021' on page 3 undef
+ined on input line 15.
+
+
+Package natbib Warning: Citation `perkovicSmartParkingSensors2020' on page 3 un
+defined on input line 15.
+
+
+Package natbib Warning: Citation `perkovicSmartParkingSensors2020' on page 3 un
+defined on input line 15.
+
+Package acronym Info: Label `acro:ml' newly defined as it shall be overridden
+although it is yet undefined on input line 15.
+
+Package natbib Warning: Citation `alaanzyRealTimeSmart2025' on page 3 undefined
+ on input line 15.
+
+
+Package natbib Warning: Citation `hassineDynamicPricingRoute2024' on page 3 und
+efined on input line 21.
+
+
+Package natbib Warning: Citation `hassineDynamicPricingRoute2024' on page 3 und
+efined on input line 21.
+
+
+Package natbib Warning: Citation `icarte-ahamudaMultiAgentSystemParking2025' on
+ page 3 undefined on input line 21.
+
+
+Package natbib Warning: Citation `icarte-ahumadaMultiAgentSystemParking2025' on
+ page 3 undefined on input line 27.
+
+
+Package natbib Warning: Citation `fancelloAnalysisVisualDistraction2025' on pag
+e 3 undefined on input line 36.
+
+
+Package natbib Warning: Citation `fancelloAnalysisVisualDistraction2025' on pag
+e 3 undefined on input line 36.
+
 )
-
-[3.3] (./section/methodology.tex
-LaTeX Font Info:    Font shape `T1/LinuxLibertineT-TLF/m/it' will be
-(Font)              scaled to size 9.0pt on input line 14.
-LaTeX Font Info:    Font shape `T1/LinuxLibertineT-TLF/b/it' will be
-(Font)              scaled to size 9.0pt on input line 14.
-
-Underfull \hbox (badness 10000) in paragraph at lines 14--15
-
- []
-
-)
-
-[4.4{/opt/texlive/texdir/texmf-dist/fonts/enc/dvips/libertine/lbtn_ki75ao.enc}]
-(./section/conclusion.tex
-
-Class acmart Warning: \vspace should only be used to provide space above/below 
-surrounding objects on input line 19.
+Underfull \vbox (badness 10000) has occurred while \output is active []
 
 
-Class acmart Warning: \vspace should only be used to provide space above/below 
-surrounding objects on input line 22.
 
+[3.3]
 
-Package natbib Warning: Citation `ref01' on page 5 undefined on input line 25.
+[4.4] (./section/methodology.tex)
 
+[5.5] (./section/conclusion.tex)
 
-Underfull \hbox (badness 10000) in paragraph at lines 25--31
-
- []
-
-
-Package natbib Warning: Citation `ref02' on page 5 undefined on input line 31.
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 31--37
-
- []
-
-
-Package natbib Warning: Citation `ref03' on page 5 undefined on input line 38.
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 38--44
-
- []
-
-)
-
-[5.5{/opt/texlive/texdir/texmf-dist/fonts/enc/dvips/libertine/lbtn_7grukw.enc}]
-(./section/references.tex (out/main.bbl
+[6.6] (./section/references.tex (out/main.bbl
 LaTeX Font Info:    Font shape `T1/LinuxLibertineT-TLF/m/it' will be
 (Font)              scaled to size 7.0pt on input line 88.
 ))
@@ -1240,34 +1241,34 @@ File: se-pdfdoc.def 2019/11/29 v1.12 stringenc: PDFDocEncoding
 )
 (/opt/texlive/texdir/texmf-dist/tex/generic/stringenc/se-utf8.def
 File: se-utf8.def 2019/11/29 v1.12 stringenc: UTF-8
-) [6.6]
+) [7.7{/opt/texlive/texdir/texmf-dist/fonts/enc/dvips/libertine/lbtn_7grukw.enc
+}]
 (out/main.aux)
  ***********
-LaTeX2e <2024-11-01> patch level 1
-L3 programming layer <2024-12-09>
+LaTeX2e <2024-11-01> patch level 2
+L3 programming layer <2025-01-18>
  ***********
 Package rerunfilecheck Info: File `main.out' has not changed.
 (rerunfilecheck)             Checksum: 5D42BCEF33FE20DD7F6C4013918B8CB0;953.
  ) 
 Here is how much of TeX's memory you used:
- 23183 strings out of 473254
- 375801 string characters out of 5720015
- 836907 words of memory out of 5000000
- 45543 multiletter control sequences out of 15000+600000
- 686863 words of font info for 259 fonts, out of 8000000 for 9000
+ 23182 strings out of 473201
+ 375167 string characters out of 5718191
+ 842390 words of memory out of 5000000
+ 45612 multiletter control sequences out of 15000+600000
+ 665087 words of font info for 231 fonts, out of 8000000 for 9000
  1302 hyphenation exceptions out of 8191
  90i,11n,131p,1001b,723s stack positions out of 10000i,1000n,20000p,200000b,200000s
 </opt/texlive/texdir/texmf-dist/fonts/type1/public/libertine/LinBiolinumT.pfb
 ></opt/texlive/texdir/texmf-dist/fonts/type1/public/libertine/LinBiolinumTB.pfb
 ></opt/texlive/texdir/texmf-dist/fonts/type1/public/libertine/LinLibertineT.pfb
 ></opt/texlive/texdir/texmf-dist/fonts/type1/public/libertine/LinLibertineTB.pf
-b></opt/texlive/texdir/texmf-dist/fonts/type1/public/libertine/LinLibertineTBI.
-pfb></opt/texlive/texdir/texmf-dist/fonts/type1/public/libertine/LinLibertineTI
-.pfb></opt/texlive/texdir/texmf-dist/fonts/type1/public/newtx/txsys.pfb>
-Output written on out/main.pdf (6 pages, 428222 bytes).
+b></opt/texlive/texdir/texmf-dist/fonts/type1/public/libertine/LinLibertineTI.p
+fb></opt/texlive/texdir/texmf-dist/fonts/type1/public/newtx/txsys.pfb>
+Output written on out/main.pdf (7 pages, 372132 bytes).
 PDF statistics:
- 137 PDF objects out of 1000 (max. 8388607)
- 109 compressed objects within 2 object streams
- 23 named destinations out of 1000 (max. 500000)
- 65601 words of extra memory for PDF output out of 74296 (max. 10000000)
+ 130 PDF objects out of 1000 (max. 8388607)
+ 103 compressed objects within 2 object streams
+ 24 named destinations out of 1000 (max. 500000)
+ 53313 words of extra memory for PDF output out of 61914 (max. 10000000)
 
