@@ -1,0 +1,72 @@
+%Je nach dem in welcher Sprache ihr euer Paper schreiben wollt, benutzt bitte entweder den Deutschen-Titel oder den Englischen (einfach aus- bzw. einkommentieren mittels '%')
+
+%Deutsch
+\section{Stand des Wissens}\label{sec:related_work}
+
+% Definition SMART Parking und Komponenten
+
+Aktuelle \ac{sps} werden zunehmend als \ac{iot}-basierte Smart-City-Systeme verstanden. Ziel solcher Systeme ist es, Parksuchverkehr und daraus folgende Probleme zu reduzieren, freie Stellplätze schneller auffindbar zu machen und vorhandene Parkflächen effizienter zu nutzen. Sie verbinden Sensorik, Kommunikationsstandards, Datenverarbeitung und nutzerseitige Anwendungen zu einer mehrschichtigen Architektur. \citet{rajSmartParkingSystems2024} ordnen modernste \ac{sps} in das Zeitalter des \enquote{Parking 4.0} ein und gliedern übliche Architekturen in mehrere Ebenen: 
+(1) in einen Physical Layer mit Sensoren zur Detektion eines Fahrzeuges,
+(2) einen Transaction Layer zur Aufbereitung und Übertragung der Daten, 
+(3) einen Network Layer zur Speicherung und weiteren Verarbeitung der Daten und 
+(4) einen Application Layer zur Interaktion mit dem \ac{sps} \citep{rajSmartParkingSystems2024}.
+\citet{alamSurveyIoTDriven2023} geben dazu einen Überblick über \ac{iot}-getriebene Smart-Parking-Management-Systeme und betrachten Ansätze, Technologien, Komponenten, Kommunikationsstandards und Sicherheitsfragen \citep{alamSurveyIoTDriven2023}.\citet{fahimSmartParkingSystems2021} zeigen in ihrer Übersichtsstudie, dass \ac{sps} nach technologischen Ansätzen, eingesetzten Sensoren, Netzwerktechnologien, User Interfaces, Rechenansätzen und bereitgestellten Services analysiert werden können \citep{fahimSmartParkingSystems2021}.
+
+Studien rund um \acp{sps} teilen sich mehrere Forschungsgebiete. Ein wesentlicher Teil beschäftigt sich mit der Echtzeiterfassung der Parkplatzbelegung. Ältere Arbeiten verwenden dafür unterschiedliche Technologien, darunter meist \ac{ir}- und akustische Sensoren sowie Kameras und Induktionsschleifen \citep{fahimSmartParkingSystems2021}. \citet{perkovicSmartParkingSensors2020} untersuchen diesbezüglich die Leistungsfähigkeit üblicher Smart-Parking-Sensoren, dazugehörige Funknetzprotokolle und Optimierungsmöglichkeiten \citep{perkovicSmartParkingSensors2020}. Aktuellere Studien rücken den Einsatz von \ac{ml} sowie Edge- und Fog-Computing nahe der Datenquelle in den Vordergrund, um geringere Latenzen und eine bessere Ressourcennutzung zu erzielen \citep{alaanzyRealTimeSmart2025}{kimRealTimeParkingSpace2025}. 
+
+% \citet{nooripourSmartParkingSystems2024} und \citet{rajSmartParkingSystems2024} weisen bei der Datengewinnung unterdessen auf Herausforderungen hin, die von Umwelteinflüssen wie Witterung, über Instandhaltungskosten bis zu rechtlichen Bedenken reichen \citep{nooripourSmartParkingSystems2024}{rajSmartParkingSystems2024}. 
+
+% Bestehende Forschungsgebiete (Leitsysteme)
+
+Neben der Erfassung freier Stellplätze untersucht die Forschung außerdem, wie Parkinformationen in Routing- und Entscheidungsprozesse integriert werden können. \citet{hassineDynamicPricingRoute2024} schlagen ein Multi-Agent-System mit dynamischer Preisgestaltung und Routenführung vor, um Parkraumnachfrage und Angebot besser abzustimmen und Suchverkehr zu reduzieren. So können beispielsweise Hotspots besonders in Spitzenzeiten durch alternative Parkplätze in der Nähe entlastet werden \citep{hassineDynamicPricingRoute2024}. Um bei der Parkplatzwahl optimale Vorschläge auf Basis der aktuellen Position und Präferenzen geben zu können, berücksichtigen \citet{icarte-ahamudaMultiAgentSystemParking2025} teilweise Kriterien wie
+(1) Nähe zur Destination, 
+(2) Kosten, 
+(3) Sicherheit, 
+(4) Verkehrsfluss, 
+(5) Fahrzeug-Eigenschaften sowie
+(6) Parkplatzfeatures \citep{icarte-ahumadaMultiAgentSystemParking2025}. 
+% \citet{amariNewParkingLot2023} erweitern diese noch um (7) Physische Gegebenheiten der Person / Gesundheitsdaten \citep{amariNewParkingLot2023}.
+
+% Bestehende Forschungsgebiete (Prognose- und Optimierung)
+
+
+
+% Bestehende Forschungsgebiete (Ablenkung während der Fahrt)
+
+Multifunktionale Tools wie das Smartphone bieten eine Alternative zu verbauten Navigationsgeräten und ermöglichen eine dynamische Navigation, um die gewünschte Destination zu erreichen \acp{sps}. \citet{oviedo-trespalaciosUnderstandingImpactsMobile2016} zeigen in ihrer Übersichtsstudie, dass mobile Telefonnutzung während der Fahrt unter anderem Reaktionszeit, visuelle Aufmerksamkeit, Spurhaltung und Fahrzeugkontrolle negativ beeinflussen können \citep{oviedo-trespalaciosUnderstandingImpactsMobile2016}. \citet{fancelloAnalysisVisualDistraction2025} fokussieren ihre Studie explizit auf visuelle Ablenkung durch Smartphone-Nutzung beim Fahren. Aufgaben wie das Lesen und Schreiben von Nachrichten erfordern die höchste Aufmerksamkeit, weshalb vereinfachte Benutzeroberflächen an Bedeutung gewinnen \citep{fancelloAnalysisVisualDistraction2025}{khanDesignContextAwareAdaptive2020}.
+
+% Projekt-Delta / kurze Reflexion der vorherigen Absätze / Plan für die vorgestellte Studie
+
+Zusammenfassend zeigt die Literatur, dass Smart-Parking-Systeme bereits zahlreiche Einzelaspekte adressieren. Sensorbasierte Systeme erfassen freie Stellplätze, Fog- und Edge-Ansätze verbessern die Echtzeitverarbeitung, und Optimierungsverfahren unterstützen die Auswahl geeigneter Parkoptionen. Gleichzeitig zeigen Arbeiten zur Fahrerablenkung, dass zusätzliche mobile Interaktion während der Fahrt sicherheitskritisch sein kann. Die Forschungslücke liegt daher weniger in der bloßen Erkennung freier Parkplätze, sondern in der Verbindung von Echtzeit-Parkdaten, dynamischer Navigationsentscheidung, individuellen Präferenzen und reduzierter Interaktion. Drive \& Decide positioniert sich genau in diesem Zwischenraum, indem Parkinformationen nicht nur bereitgestellt, sondern in eine ablenkungsarme Entscheidungsempfehlung während der Zielführung überführt werden.
+
+
+
+
+% % Englisch
+% %\section{Related Work}
+
+% Ziel dieses Kapitels ist es, dem Leser zu zeigen, welche anderen verwandten Arbeiten im selben Universum / Forschungsfeld bereits Ergebnisse geliefert haben. Hier geht es darum, dass man zeigt, dass man das eigene Forschungsfeld kennt und die wichtigsten Arbeiten darin kurz zusammengefasst beschreibt. 
+
+% Genauso ist es wichtig, dass man folgenden Unterschied bzw. das DELTA herausarbeitet:
+% \begin{itemize}
+% 	\item[] Your Work vs. Related Work
+% 	\item[] ODER
+% 	\item[] Was haben die anderen Arbeiten eben NICHT gemacht und darum möchten wir es in diesem Position Paper motivieren
+% \end{itemize}
+
+% Dieses Kapitel ist sehr wichtig, weil es aus der Einleitung und der Problembeschreibung heraus nochmal zeigt, dass es einen NEED gibt, um dieses Problem zu lösen (weil es bis jetzt kein anderer getan hat).
+
+% Folgende Key-Points gibt es bei diesem Kapitel zu beachten:
+% \begin{itemize}
+% 	\item mind. 10 wissenschaftliche Quellen (andere Papers oder facheinschlägige Bücher) sollen identifiziert und zusammengefasst dargestellt / beschrieben werden. Dabei sollen diese wissenschaftlichen Quellen zitiert werden
+% 	\item die wissenschaftlichen Quellen sollen sich zu den nicht wissenschaftlichen Quellen die Waage halten im Verhältnis von 2/3 wissenschaftliche Quellen zu 1/3 andere Quellen 
+% 	\item folgende Datenbanken gelten als "gültige Datenbanken" um wissenschaftliche Quellen zu suchen:
+% 	\subitem ACM Digital Library: \href{https://dl.acm.org/}{https://dl.acm.org/}	
+% 	\subitem IEEE Explore: \href{https://ieeexplore.ieee.org/Xplore/home.jsp}{https://ieeexplore.ieee.org/Xplore/home.jsp} 
+% 	\subitem Scopus: \href{https://www.scopus.com/search/form.uri?display=basic\#basic}{https://www.scopus.com/search/form.uri?display=basic\#basic}
+% 	\subitem Science Direct: \href{https://www.sciencedirect.com/search}{https://www.sciencedirect.com/search} 
+% 	\subitem Springer Verlag: \href{https://link.springer.com/}{https://link.springer.com/}
+% 	\subitem Scitepress Digital Library: \href{https://www.scitepress.org/AdvancedSearch.aspx?SearchCriteria=Papers}{https://www.scitepress.org/AdvancedSearch.aspx?SearchCriteria=Papers} 
+% \end{itemize}
+
+% \textbf{VORGABE}: dieses Kapitel soll genau eine A4-Seite benötigen

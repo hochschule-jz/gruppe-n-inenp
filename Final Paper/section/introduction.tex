@@ -1,0 +1,26 @@
+\section{Einleitung und Problemhintergrund}
+
+Statistik Austria meldete 2025 einen erneuten Anstieg des \acs{pkw}-Bestands um 54.208 Fahrzeuge \citep{statistikaustriaPkwBestand2025Um2026} sowie die höchste Zahl an Neuzulassungen seit 2019 \citep{statistikaustria2025VielePkwNeuzulassungen2026}.
+Diese Entwicklung verdeutlicht den anhaltenden Trend steigender Motorisierung in Österreich.
+Mit mehr als 7,5 Millionen zugelassenen \acp{kfz} wurde zwischen 1990 und 2025 ein Höchststand erreicht, wobei besonders große Fahrzeuge wie Geländewagen und \acp{suv} zunehmend öffentlichen Raum beanspruchen \citep{hatzlDatenZeigenImmer2025}.
+Dieser Trend erhöht den Druck auf städtische Infrastrukturen und macht eine effizientere Nutzung vorhandener Verkehrsflächen erforderlich \citep{jaschinskyWarumOsterreichsStadte2025}.
+
+Ein zentraler Aspekt dieser Entwicklung ist die zunehmende Schwierigkeit, geeignete Parkmöglichkeiten zu finden.
+Während Wien selbst einen vergleichsweise geringeren \acs{kfz}-Bestand aufweist, pendeln Erwerbstätige regelmäßig aus dem Umland in die Stadt \citep{statistikaustriaKfzBestand2026}.
+Aufgrund teilweise unzureichender Anbindungen an den öffentlichen Verkehr erfolgt diese Mobilität häufig mit dem privaten \acs{kfz} \citep{aknoAKNiederosterreichPendleranalyse20252025}.
+Die Suche nach einem Parkplatz endet dabei häufig in Parkhäusern, die nur teilweise mit Parkleitsystemen ausgestattet sind und meist nur statische oder lokal begrenzte Informationen liefern \citep{stadtwienParkleitsystemFuerWien2026}. Für Anreisende bedeutet dies häufig wiederholtes Anfahren mehrerer Parkhäuser sowie zusätzlichen Zeitverlust bei der Suche nach einem freien Stellplatz.
+Der dadurch entstehende Suchverkehr verstärkt zugleich die Belastung urbaner Infrastrukturen und führt zu vermeidbaren Emissionen sowie höherer Lärmbelastung in den betroffenen Stadtteilen.
+
+Auf der Angebotsseite stehen Parkhausbetreiber unter wachsendem Druck, ihre Stellplätze effizient auszulasten und sich gegenüber alternativen Mobilitätsangeboten zu behaupten \citep{wangEconomicsSmartParking2025}. \acp{sps} versprechen genau diese Effizienzgewinne durch Echtzeit-Belegungsdaten \citep{alaanzyRealTimeSmart2025}, dynamische Steuerung und eine bessere Auffindbarkeit freier Stellplätze \citep{sarkerSmartParkingSystem2020}. Gleichzeitig erfordern solche Systeme jedoch Investitionen in Sensorik, Cloud-Infrastruktur und laufenden Betrieb, deren wirtschaftliche Rentabilität für viele Betreiber unklar bleibt.
+
+Hinzu kommt ein gesellschaftlicher Aspekt: das aktive Suchen nach Parkinformationen während der Fahrt erhöht das Ablenkungspotential mobiler Endgeräte und beeinträchtigt nachweislich Fahrverhalten und Aufmerksamkeit \citep{oviedo-trespalaciosUnderstandingImpactsMobile2016}.
+In Österreich ist rund ein Drittel der Verkehrsunfälle mit Todesfolge auf Unachtsamkeit und Ablenkung zurückzuführen \citep{bmi397VerkehrstoteAuf2026}.
+Ein verlässliches Smart-Parking-System kann hier nicht nur den Betreibern, sondern auch den Endnutzern einen Mehrwert in Form höherer Verkehrssicherheit bieten.
+
+Im Rahmen dieser Arbeit wird daher ein prototypisches Smart-Parking-System entworfen, das auf einer \ac{aws}-basierten Infrastruktur mit \ac{iot} Core, \ac{mqtt} und serverless Lambda-Funktionen aufbaut. Zur Veranschaulichung wird ein Prototyp entwickelt: ein 3D-gedrucktes Modell einer Parkgarage mit Matchbox-Fahrzeugen sowie eine virtuelle Parkgarage mit Ampelsystem. Auf dieser Basis wird eine Kosten-Nutzen-Analyse aus Sicht eines Parkhausbetreibers entwickelt, die Investitions- und Betriebskosten dem erwarteten wirtschaftlichen Nutzen gegenüberstellt.
+
+Der weitere Aufbau dieser Arbeit gliedert sich wie folgt: Kapitel \ref{sec:related_work} fasst den Stand des Wissens zu \acp{sps}, \ac{iot}-basierten Architekturen sowie zu wirtschaftlichen Bewertungen vergleichbarer Systeme zusammen.
+Zudem wird der eigene Beitrag dieser Arbeit von bestehenden Forschungsergebnissen abgegrenzt.
+Anschließend stellt Kapitel \ref{sec:methodology} den methodischen Ansatz von Drive \& Decide vor.
+Dort werden der zugrunde liegende Use Case, der technische Aufbau des Prototypen mit \ac{aws}-Backend sowie das Kosten-Nutzen-Modell aus Sicht eines Parkhausbetreibers im Detail beschrieben. Außerdem wird erläutert, anhand welcher Kennzahlen die wirtschaftliche Sinnhaftigkeit der Lösung bewertet werden soll.
+Kapitel \ref{sec:conclusion} fasst abschließend die zentralen Erkenntnisse zusammen, leitet die wichtigsten Implikationen für Parkhausbetreiber ab und gibt einen Ausblick auf weiterführende Arbeiten.
