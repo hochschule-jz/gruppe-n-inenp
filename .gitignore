@@ -3,3 +3,15 @@ Position Paper/out/
 Final Paper/out/
 .claude/
 .serena/
+
+# PlatformIO build output is ignored by firmware/.gitignore (auto-generated)
+
+# Secrets hygiene — never commit per-board config, keys, or certificates
+firmware/**/config.h
+**/secrets.h
+*.pem
+*.key
+*.crt
+*-private.pem.key
+*-certificate.pem.crt
+AmazonRootCA*.pem
