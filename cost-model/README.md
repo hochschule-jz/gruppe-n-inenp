@@ -3,7 +3,6 @@
 The heart of the work: the operator cost-benefit model over a 5-year horizon, feeding the
 Final Paper. A spreadsheet or notebook.
 
-**Owner:** Person B (cost-data collection); inputs from Person A (CloudWatch metrics).
 **Plan phases:** 3B.4 (data collection), 5 (measured cloud usage), 7 (model + sensitivity).
 
 ## Contents (to be added)

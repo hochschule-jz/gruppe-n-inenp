@@ -1,6 +1,6 @@
 # virtual/load_generator/
 
-MQTT load generator (Person B, Phase 3B.1 + Phase 5).
+MQTT load generator (Phase 3B.1 + Phase 5).
 
 A script (Python `paho-mqtt` or AWS IoT Device SDK) that connects to IoT Core with a cert
 and publishes the locked topic + JSON schema for spots `1..N` following a **load profile**

@@ -3,7 +3,6 @@
 The virtual prototype: a software load generator that drives the same MQTT path at
 scale (no extra hardware), plus the entrance traffic light driven by aggregated occupancy.
 
-**Owner:** Person B.
 **Plan phase:** 3B (and Phase 5 for load-at-scale measurements).
 
 ## Layout

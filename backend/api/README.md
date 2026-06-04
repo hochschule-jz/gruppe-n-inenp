@@ -1,6 +1,6 @@
 # backend/api/
 
-API Gateway definition (Person A, Phase 3A.5) — data-flow step 6.
+API Gateway definition (Phase 3A.5) — data-flow step 6.
 
 HTTP API, Lambda-proxy to the aggregation handler. Exposes aggregated values to consumers
 (web view, third-party navigation):

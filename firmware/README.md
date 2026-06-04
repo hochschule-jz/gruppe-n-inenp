@@ -3,7 +3,6 @@
 Shared ESP32 firmware (PlatformIO project) for reading the TCRT5000 occupancy sensors
 and publishing state changes over MQTT to AWS IoT Core.
 
-**Owner:** Both (developed in parallel, merged onto one demo board).
 **Plan phases:** 0, 1, 2, 6.
 **Toolchain:** PlatformIO (VS Code extension). This folder is the PlatformIO project root.
 
@@ -24,6 +23,6 @@ and publishing state changes over MQTT to AWS IoT Core.
 - Serial monitor: 🔌, or `pio device monitor` (115200 baud).
 
 ## Contract (locked in Phase 0 — see `docs/contract.md`)
-- Pin map: spot 1→GPIO32, 2→GPIO33 (Person A), 3→GPIO25, 4→GPIO26 (Person B).
+- Pin map: spot 1→GPIO32, 2→GPIO33, 3→GPIO25, 4→GPIO26 (see `docs/contract.md`).
 - Topic: `parking/<garageId>/spot/<spotId>` (e.g. `parking/garage1/spot/3`).
 - Power TCRT5000 modules from **3V3**, not 5V (DO pulls up to VCC; 5V over-drives the GPIO).

@@ -1,6 +1,6 @@
 # backend/iot/
 
-AWS IoT Core configuration (Person A, Phase 3A.1).
+AWS IoT Core configuration (Phase 3A.1).
 
 Holds: thing + certificate notes, the least-privilege device **policy JSON**, and the
 **IoT Rule SQL** that routes `parking/+/spot/+` messages to the validation Lambda.

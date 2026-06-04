@@ -4,7 +4,6 @@ AWS serverless pipeline: device connectivity → validation → storage → aggr
 Built once; serves the two dev boards or the single demo board identically because it
 keys on `spotId`.
 
-**Owner:** Person A.
 **Plan phase:** 3A.
 
 ## Layout

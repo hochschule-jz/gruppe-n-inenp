@@ -12,14 +12,14 @@ architecture, used as the basis for an operator cost-benefit model. Hochschule B
 - `Final Paper/` — the empirical evaluation (quantitative results feed in here).
 
 ### Engineering
-- `firmware/` — shared ESP32 sketch (TCRT5000 → MQTT → AWS IoT Core). *Both, parallel → 1 demo board.*
-- `backend/` — AWS serverless pipeline (IoT Core, validation/aggregation Lambdas, DynamoDB, API Gateway). *Person A.*
-- `virtual/` — virtual prototype: MQTT load generator + traffic-light logic. *Person B.*
-- `web/` — thin garage-grid + traffic-light visualisation. *Person B.*
-- `cost-model/` — CAPEX/OPEX/TCO/ROI/break-even + sensitivity analysis. *Person B.*
+- `firmware/` — shared ESP32 sketch (TCRT5000 → MQTT → AWS IoT Core).
+- `backend/` — AWS serverless pipeline (IoT Core, validation/aggregation Lambdas, DynamoDB, API Gateway).
+- `virtual/` — virtual prototype: MQTT load generator + traffic-light logic.
+- `web/` — thin garage-grid + traffic-light visualisation.
+- `cost-model/` — CAPEX/OPEX/TCO/ROI/break-even + sensitivity analysis.
 - `docs/` — the Phase 0 contract, measurements, demo runbook, screenshots.
 
-Each folder has its own `README.md` with purpose, owner, and the relevant plan phase.
+Each folder has its own `README.md` with its purpose and the relevant plan phase.
 
 ## Start here
 1. **`docs/contract.md`** — the locked Phase 0 contract (pin map, MQTT topic, JSON schema,
