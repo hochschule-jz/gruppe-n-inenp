@@ -1,0 +1,12 @@
+{
+  "name": "offpeak",
+  "spots": 350,
+  "targetUtil": 0.35,
+  "dwellMeanMin": 140,
+  "durationMin": 60,
+  "timeScale": 1.0,
+  "warmStart": true,
+  "seed": 42,
+  "garageId": "garage1",
+  "sensorId": "virtual-loadgen"
+}

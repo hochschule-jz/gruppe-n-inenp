@@ -15,3 +15,12 @@ firmware/**/config.h
 *-private.pem.key
 *-certificate.pem.crt
 AmazonRootCA*.pem
+
+# Virtual prototype: per-account AWS connection config (copy from config.example.ini)
+virtual/**/config.ini
+
+# Python (virtual/ load generator + traffic light)
+.venv/
+__pycache__/
+*.pyc
+.pytest_cache/

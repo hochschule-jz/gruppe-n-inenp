@@ -1,0 +1,5 @@
+# traffic_light has no runtime dependencies — it uses only the Python standard
+# library (urllib) so it stays a lightweight, importable component.
+#
+# Development/test only:
+pytest>=7.0

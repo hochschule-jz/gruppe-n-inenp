@@ -1,0 +1,12 @@
+{
+  "name": "peak",
+  "spots": 350,
+  "targetUtil": 0.88,
+  "dwellMeanMin": 90,
+  "durationMin": 60,
+  "timeScale": 1.0,
+  "warmStart": true,
+  "seed": 42,
+  "garageId": "garage1",
+  "sensorId": "virtual-loadgen"
+}

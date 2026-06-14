@@ -1,0 +1,5 @@
+# Runtime (only needed for --transport aws; --dry-run uses the stdlib only):
+paho-mqtt>=2.0
+
+# Development/test only:
+pytest>=7.0
