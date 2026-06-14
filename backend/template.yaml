@@ -1,0 +1,341 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: Drive & Decide MVP backend (AWS Academy Learner Lab, us-east-1 recommended)
+
+Parameters:
+  TotalSpots:
+    Type: Number
+    Default: 4
+    MinValue: 1
+    Description: >-
+      Number of parking spots in the garage. Drives BOTH the validation range
+      check (a valid spotId is 1..TotalSpots) and the aggregation denominator
+      (utilisation = occupied / TotalSpots). Use 4 for the physical demo board;
+      set to 200 / 350 / 500 for the virtual load-generator scale runs (Phase 5).
+      Default 4 preserves the originally deployed behaviour.
+
+Resources:
+  ParkingStatusTable:
+    Type: AWS::DynamoDB::Table
+    DeletionPolicy: Retain
+    UpdateReplacePolicy: Retain
+    Properties:
+      TableName: ParkingStatus
+      BillingMode: PAY_PER_REQUEST
+      AttributeDefinitions:
+        - AttributeName: garageId
+          AttributeType: S
+        - AttributeName: spotId
+          AttributeType: N
+      KeySchema:
+        - AttributeName: garageId
+          KeyType: HASH
+        - AttributeName: spotId
+          KeyType: RANGE
+      TableClass: STANDARD
+      Tags:
+        - Key: Project
+          Value: DriveAndDecide
+        - Key: Environment
+          Value: Lab
+
+  ValidationFunction:
+    Type: AWS::Lambda::Function
+    DependsOn: ParkingStatusTable
+    Properties:
+      FunctionName: drive-decide-validation
+      Runtime: python3.12
+      Handler: index.lambda_handler
+      Role: !Sub arn:aws:iam::${AWS::AccountId}:role/LabRole
+      MemorySize: 128
+      Timeout: 3
+      Architectures:
+        - x86_64
+      Environment:
+        Variables:
+          TABLE_NAME: ParkingStatus
+          MAX_SPOTS: !Sub '${TotalSpots}'
+      Code:
+        ZipFile: |
+          import json
+          import os
+          import time
+          import boto3
+
+          TABLE_NAME = os.environ.get("TABLE_NAME", "ParkingStatus")
+          MAX_SPOTS = int(os.environ.get("MAX_SPOTS", "4"))
+          ALLOWED_STATUS = {"occupied", "free"}
+
+          dynamodb = boto3.resource("dynamodb")
+          table = dynamodb.Table(TABLE_NAME)
+
+          def _response(status_code, body):
+              return {
+                  "statusCode": status_code,
+                  "body": json.dumps(body)
+              }
+
+          def lambda_handler(event, context):
+              print("Received event:", json.dumps(event))
+
+              try:
+                  garage_id = str(event["garageId"])
+                  sensor_id = str(event["sensorId"])
+                  spot_id = int(event["spotId"])
+                  raw = int(event["raw"])
+                  status = str(event["status"])
+                  ts = int(event.get("ts", int(time.time() * 1000)))
+
+                  if not garage_id:
+                      raise ValueError("garageId must not be empty")
+                  if not sensor_id:
+                      raise ValueError("sensorId must not be empty")
+                  if spot_id < 1 or spot_id > MAX_SPOTS:
+                      raise ValueError(f"spotId must be between 1 and {MAX_SPOTS}")
+                  if raw not in (0, 1):
+                      raise ValueError("raw must be 0 or 1")
+                  if status not in ALLOWED_STATUS:
+                      raise ValueError("status must be 'occupied' or 'free'")
+
+                  table.update_item(
+                      Key={
+                          "garageId": garage_id,
+                          "spotId": spot_id
+                      },
+                      UpdateExpression=(
+                          "SET #status = :status, "
+                          "#raw = :raw, "
+                          "ts = :ts, "
+                          "sensorId = :sensorId"
+                      ),
+                      ExpressionAttributeNames={
+                          "#status": "status",
+                          "#raw": "raw"
+                      },
+                      ExpressionAttributeValues={
+                          ":status": status,
+                          ":raw": raw,
+                          ":ts": ts,
+                          ":sensorId": sensor_id
+                      }
+                  )
+
+                  return _response(200, {
+                      "message": "status stored",
+                      "garageId": garage_id,
+                      "spotId": spot_id,
+                      "status": status
+                  })
+
+              except Exception as exc:
+                  print("Validation failed:", str(exc))
+                  return _response(400, {
+                      "message": "validation failed",
+                      "error": str(exc)
+                  })
+      Tags:
+        - Key: Project
+          Value: DriveAndDecide
+        - Key: Environment
+          Value: Lab
+
+  AggregationFunction:
+    Type: AWS::Lambda::Function
+    DependsOn: ParkingStatusTable
+    Properties:
+      FunctionName: drive-decide-aggregation
+      Runtime: python3.12
+      Handler: index.lambda_handler
+      Role: !Sub arn:aws:iam::${AWS::AccountId}:role/LabRole
+      MemorySize: 128
+      Timeout: 3
+      Architectures:
+        - x86_64
+      Environment:
+        Variables:
+          TABLE_NAME: ParkingStatus
+          TOTAL_SPOTS: !Sub '${TotalSpots}'
+      Code:
+        ZipFile: |
+          import json
+          import os
+          import boto3
+          from decimal import Decimal
+
+          TABLE_NAME = os.environ.get("TABLE_NAME", "ParkingStatus")
+          TOTAL_SPOTS = int(os.environ.get("TOTAL_SPOTS", "4"))
+
+          dynamodb = boto3.resource("dynamodb")
+          table = dynamodb.Table(TABLE_NAME)
+
+          def decimal_default(obj):
+              if isinstance(obj, Decimal):
+                  if obj % 1 == 0:
+                      return int(obj)
+                  return float(obj)
+              raise TypeError
+
+          def lambda_handler(event, context):
+              print("Received event:", json.dumps(event))
+
+              garage_id = "garage1"
+              path_params = event.get("pathParameters") or {}
+              if path_params.get("garageId"):
+                  garage_id = path_params["garageId"]
+
+              response = table.query(
+                  KeyConditionExpression="garageId = :garageId",
+                  ExpressionAttributeValues={
+                      ":garageId": garage_id
+                  }
+              )
+
+              items = response.get("Items", [])
+              spots = []
+              occupied_count = 0
+
+              for item in sorted(items, key=lambda x: int(x["spotId"])):
+                  status = item.get("status", "unknown")
+                  if status == "occupied":
+                      occupied_count += 1
+                  spots.append({
+                      "spotId": int(item["spotId"]),
+                      "status": status,
+                      "raw": int(item.get("raw", 0)),
+                      "ts": int(item.get("ts", 0)),
+                      "sensorId": item.get("sensorId", "unknown")
+                  })
+
+              total_spots = TOTAL_SPOTS
+              free_count = max(total_spots - occupied_count, 0)
+              utilization = occupied_count / total_spots if total_spots > 0 else 0
+
+              if utilization < 0.70:
+                  light = "green"
+              elif utilization <= 0.90:
+                  light = "yellow"
+              else:
+                  light = "red"
+
+              body = {
+                  "garageId": garage_id,
+                  "totalSpots": total_spots,
+                  "occupied": occupied_count,
+                  "free": free_count,
+                  "utilization": round(utilization, 4),
+                  "light": light,
+                  "spots": spots
+              }
+
+              return {
+                  "statusCode": 200,
+                  "headers": {
+                      "Content-Type": "application/json",
+                      "Access-Control-Allow-Origin": "*"
+                  },
+                  "body": json.dumps(body, default=decimal_default)
+              }
+      Tags:
+        - Key: Project
+          Value: DriveAndDecide
+        - Key: Environment
+          Value: Lab
+
+  IoTPublishPolicy:
+    Type: AWS::IoT::Policy
+    Properties:
+      PolicyName: drive-decide-iot-publish-policy
+      PolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: Allow
+            Action: iot:Connect
+            Resource: !Sub arn:aws:iot:${AWS::Region}:${AWS::AccountId}:client/${!iot:ClientId}
+          - Effect: Allow
+            Action: iot:Publish
+            Resource: !Sub arn:aws:iot:${AWS::Region}:${AWS::AccountId}:topic/parking/*/spot/*
+      Tags:
+        - Key: Project
+          Value: DriveAndDecide
+        - Key: Environment
+          Value: Lab
+
+  ParkingStatusTopicRule:
+    Type: AWS::IoT::TopicRule
+    Properties:
+      RuleName: drive_decide_parking_status_rule
+      TopicRulePayload:
+        RuleDisabled: false
+        AwsIotSqlVersion: '2016-03-23'
+        Sql: SELECT *, topic(4) AS spotIdFromTopic FROM 'parking/+/spot/+'
+        Actions:
+          - Lambda:
+              FunctionArn: !GetAtt ValidationFunction.Arn
+      Tags:
+        - Key: Project
+          Value: DriveAndDecide
+        - Key: Environment
+          Value: Lab
+
+  ValidationInvokePermissionForIoT:
+    Type: AWS::Lambda::Permission
+    Properties:
+      FunctionName: !GetAtt ValidationFunction.Arn
+      Action: lambda:InvokeFunction
+      Principal: iot.amazonaws.com
+      SourceArn: !Sub arn:aws:iot:${AWS::Region}:${AWS::AccountId}:rule/drive_decide_parking_status_rule
+
+  DriveDecideApi:
+    Type: AWS::ApiGatewayV2::Api
+    Properties:
+      Name: drive-decide-api
+      ProtocolType: HTTP
+      RouteSelectionExpression: $request.method $request.path
+      DisableExecuteApiEndpoint: false
+      Tags:
+        Project: DriveAndDecide
+        Environment: Lab
+
+  AggregationIntegration:
+    Type: AWS::ApiGatewayV2::Integration
+    Properties:
+      ApiId: !Ref DriveDecideApi
+      IntegrationType: AWS_PROXY
+      IntegrationMethod: POST
+      PayloadFormatVersion: '2.0'
+      IntegrationUri: !Sub arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${AggregationFunction.Arn}/invocations
+
+  AggregationRoute:
+    Type: AWS::ApiGatewayV2::Route
+    Properties:
+      ApiId: !Ref DriveDecideApi
+      RouteKey: GET /garages/{garageId}/utilization
+      Target: !Sub integrations/${AggregationIntegration}
+
+  DefaultStage:
+    Type: AWS::ApiGatewayV2::Stage
+    Properties:
+      ApiId: !Ref DriveDecideApi
+      StageName: $default
+      AutoDeploy: true
+      Tags:
+        Project: DriveAndDecide
+        Environment: Lab
+
+  AggregationInvokePermissionForApiGateway:
+    Type: AWS::Lambda::Permission
+    Properties:
+      FunctionName: !GetAtt AggregationFunction.Arn
+      Action: lambda:InvokeFunction
+      Principal: apigateway.amazonaws.com
+      SourceArn: !Sub arn:aws:execute-api:${AWS::Region}:${AWS::AccountId}:${DriveDecideApi}/*/GET/garages/*/utilization
+
+Outputs:
+  ApiUrl:
+    Description: Public utilization endpoint for garage1
+    Value: !Sub https://${DriveDecideApi}.execute-api.${AWS::Region}.amazonaws.com/garages/garage1/utilization
+  IoTTopicPattern:
+    Description: MQTT topic pattern for parking spot status messages
+    Value: parking/garage1/spot/<spotId>
+  DynamoDBTableName:
+    Description: DynamoDB table name
+    Value: !Ref ParkingStatusTable

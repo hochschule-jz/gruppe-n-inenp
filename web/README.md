@@ -6,4 +6,4 @@ lightweight.
 
 **Plan phase:** 3B.3.
 
-Reads from `GET /garages/{garageId}/utilization` (see `backend/api/`).
+Reads from `GET /garages/{garageId}/utilization` (see [`backend/`](../backend/README.md)).
