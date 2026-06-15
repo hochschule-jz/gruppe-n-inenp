@@ -4,16 +4,11 @@
 #include <ArduinoJson.h>
 #include <time.h>
 
-// ---------- WLAN ----------
-const char* WIFI_SSID = "";
-const char* WIFI_PASSWORD = "";
-
-// ---------- AWS IoT ----------
-const char* AWS_IOT_ENDPOINT = "";
-
-const char* MQTT_CLIENT_ID = "esp32-a";
-const char* SENSOR_ID = "esp32-a";
-const char* GARAGE_ID = "garage1";
+// Per-board config (WiFi, AWS endpoint, IDs) and device credentials
+// (root CA, device cert, private key). Both headers are gitignored — copy
+// from the committed config.example.h / secrets.example.h templates.
+#include "config.h"
+#include "secrets.h"
 
 // ---------- Sensor-Konfiguration ----------
 struct Spot {
@@ -33,28 +28,6 @@ const int DETECTED_LEVEL = HIGH;
 
 // Letzter bekannter Zustand
 bool lastOccupied[SPOT_COUNT];
-
-// ---------- Zertifikate ----------
-// AmazonRootCA1.pem
-static const char AWS_ROOT_CA[] PROGMEM = R"EOF(
------BEGIN CERTIFICATE-----
-
------END CERTIFICATE-----
-)EOF";
-
-// device-certificate.pem.crt
-static const char DEVICE_CERT[] PROGMEM = R"KEY(
------BEGIN CERTIFICATE-----
-
------END CERTIFICATE-----
-)KEY";
-
-// private.pem.key
-static const char DEVICE_PRIVATE_KEY[] PROGMEM = R"KEY(
------BEGIN RSA PRIVATE KEY-----
-
------END RSA PRIVATE KEY-----
-)KEY";
 
 WiFiClientSecure secureClient;
 PubSubClient mqttClient(secureClient);
@@ -228,7 +201,7 @@ void loop() {
   Serial.println("WiFi disconnected, reconnecting...");
   connectWiFi();
   }
-  
+
   if (!mqttClient.connected()) {
     connectAWS();
   }

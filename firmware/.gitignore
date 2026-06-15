@@ -3,3 +3,12 @@
 .vscode/c_cpp_properties.json
 .vscode/launch.json
 .vscode/ipch
+
+# Per-board config & secrets — never commit (see docs/contract.md §0.5)
+include/config.h
+include/secrets.h
+*.pem
+*.pem.crt
+*.pem.key
+*.key
+*.crt
