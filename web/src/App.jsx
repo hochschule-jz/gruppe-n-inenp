@@ -113,10 +113,22 @@ function useNow(ms = 1000) {
   useEffect(() => { const id = setInterval(() => set((k) => k + 1), ms); return () => clearInterval(id); }, [ms]);
   return Date.now();
 }
+// Human-readable elapsed time in German, scaling s -> min -> h -> days so a
+// multi-day-old timestamp reads "vor 4 Tagen" instead of "vor 347842 s".
+function relAgo(ms) {
+  const s = Math.max(0, Math.round(ms / 1000));
+  if (s < 60) return `vor ${s} s`;
+  const m = Math.round(s / 60);
+  if (m < 60) return `vor ${m} min`;
+  const h = Math.round(m / 60);
+  if (h < 24) return `vor ${h} h`;
+  const d = Math.round(h / 24);
+  return `vor ${d} ${d === 1 ? "Tag" : "Tagen"}`;
+}
 function agoLabel(ts, now) {
-  const s = Math.max(0, Math.round((now - ts) / 1000));
-  if (s < 1) return "gerade eben";
-  return `vor ${s} s`;
+  const ms = Math.max(0, now - ts);
+  if (ms < 1000) return "gerade eben";
+  return relAgo(ms);
 }
 function clockLabel(ts) {
   const d = new Date(ts);
@@ -203,7 +215,7 @@ function useBackend({ url, pollMs, enabled }) {
 function connLabel(conn) {
   switch (conn.state) {
     case "live": return "Aktuell";
-    case "stale": return `Veraltet · vor ${Math.round((conn.age || 0) / 1000)} s`;
+    case "stale": return `Veraltet · ${relAgo(conn.age || 0)}`;
     case "offline": return "Offline";
     case "connecting": return "Verbindet…";
     case "unconfigured": return "Nicht konfiguriert";
