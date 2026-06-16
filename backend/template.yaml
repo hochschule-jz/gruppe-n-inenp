@@ -329,6 +329,46 @@ Resources:
       Principal: apigateway.amazonaws.com
       SourceArn: !Sub arn:aws:execute-api:${AWS::Region}:${AWS::AccountId}:${DriveDecideApi}/*/GET/garages/*/utilization
 
+  # --- Static web hosting (web/dist) ---------------------------------------
+  # S3 website endpoint serving the built Vite app. Public read-only; the app
+  # is a static bundle and the API it calls is already public + CORS-open.
+  WebsiteBucket:
+    Type: AWS::S3::Bucket
+    DeletionPolicy: Delete
+    Properties:
+      # No explicit BucketName: lets CloudFormation generate a globally unique
+      # name. Read it from the StackName-prefixed output after deploy.
+      PublicAccessBlockConfiguration:
+        BlockPublicAcls: false
+        BlockPublicPolicy: false
+        IgnorePublicAcls: false
+        RestrictPublicBuckets: false
+      OwnershipControls:
+        Rules:
+          - ObjectOwnership: BucketOwnerEnforced
+      WebsiteConfiguration:
+        IndexDocument: index.html
+        # SPA-style fallback: any unknown path serves the app shell.
+        ErrorDocument: index.html
+      Tags:
+        - Key: Project
+          Value: DriveAndDecide
+        - Key: Environment
+          Value: Lab
+
+  WebsiteBucketPolicy:
+    Type: AWS::S3::BucketPolicy
+    Properties:
+      Bucket: !Ref WebsiteBucket
+      PolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Sid: PublicReadGetObject
+            Effect: Allow
+            Principal: '*'
+            Action: s3:GetObject
+            Resource: !Sub ${WebsiteBucket.Arn}/*
+
 Outputs:
   ApiUrl:
     Description: Public utilization endpoint for garage1
@@ -339,3 +379,9 @@ Outputs:
   DynamoDBTableName:
     Description: DynamoDB table name
     Value: !Ref ParkingStatusTable
+  WebsiteBucketName:
+    Description: S3 bucket to upload web/dist into (aws s3 sync)
+    Value: !Ref WebsiteBucket
+  WebsiteUrl:
+    Description: Public URL of the static web app
+    Value: !GetAtt WebsiteBucket.WebsiteURL

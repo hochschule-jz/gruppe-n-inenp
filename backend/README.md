@@ -43,7 +43,7 @@ sensor/publisher → MQTT topic → IoT Rule → Validation Lambda → DynamoDB
 ```bash
 aws cloudformation deploy \
   --region us-east-1 \
-  --stack-name drive-decide \
+  --stack-name drive-and-decide \
   --template-file backend/template.yaml \
   --parameter-overrides TotalSpots=4 \
   --capabilities CAPABILITY_NAMED_IAM

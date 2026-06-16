@@ -18,7 +18,8 @@ of the template — they must never live in Git or CloudFormation.
 | API Gateway | HTTP API `drive-decide-api` + AWS_PROXY integration to aggregation |
 | API Gateway | route `GET /garages/{garageId}/utilization`, `$default` stage (AutoDeploy) |
 | Lambda Permission | API Gateway may invoke the aggregation Lambda |
-| Outputs | API URL, topic pattern, DynamoDB table name |
+| S3 | website bucket (auto-named) + public-read bucket policy for `web/dist` |
+| Outputs | API URL, topic pattern, DynamoDB table name, website bucket + URL |
 
 Resulting backend path:
 
@@ -53,7 +54,7 @@ Update the running stack's parameter without touching code, e.g.:
 ```bash
 aws cloudformation deploy \
   --region us-east-1 \
-  --stack-name drive-decide \
+  --stack-name drive-and-decide \
   --template-file backend/template.yaml \
   --parameter-overrides TotalSpots=350 \
   --capabilities CAPABILITY_NAMED_IAM
@@ -128,6 +129,42 @@ message to `parking/garage1/spot/1`, then re-check DynamoDB and the API.
 **ESP32 / load generator** — with certs, endpoint, and config in place, the full
 path `publisher → IoT Core → IoT Rule → Validation → DynamoDB → Aggregation →
 API` works.
+
+## 6b. Deploy the web app (`web/dist` → S3)
+
+The template provisions an S3 website bucket and a public-read policy, but the
+**bundle is uploaded separately** (CloudFormation doesn't ship file contents).
+Because Vite bakes `VITE_API_URL` in at **build time**, build *after* the stack
+exists so the app points at the live API.
+
+```bash
+# 1. Read the two outputs from the deployed stack
+API_URL=$(aws cloudformation describe-stacks --stack-name drive-and-decide --region us-east-1 \
+  --query "Stacks[0].Outputs[?OutputKey=='ApiUrl'].OutputValue" --output text)
+BUCKET=$(aws cloudformation describe-stacks --stack-name drive-and-decide --region us-east-1 \
+  --query "Stacks[0].Outputs[?OutputKey=='WebsiteBucketName'].OutputValue" --output text)
+
+# 2. Build with the live endpoint baked in
+cd web
+echo "VITE_API_URL=$API_URL" > .env.production
+npm ci && npm run build
+
+# 3. Upload the static bundle
+aws s3 sync dist/ "s3://$BUCKET/" --delete
+
+# 4. Open the public URL (WebsiteUrl output)
+aws cloudformation describe-stacks --stack-name drive-and-decide --region us-east-1 \
+  --query "Stacks[0].Outputs[?OutputKey=='WebsiteUrl'].OutputValue" --output text
+```
+
+Re-run steps 2–3 whenever the web app changes. The bucket uses
+`DeletionPolicy: Delete`, so deleting the stack removes it (and its contents)
+cleanly — unlike the retained DynamoDB table.
+
+> **Learner Lab caveat:** account-level S3 *Block Public Access* can override the
+> bucket's own settings. If the `WebsiteUrl` returns 403, the bucket policy is
+> fine but public access is blocked at the account level — check S3 → Account
+> settings, or fall back to serving the demo via `npm run preview` locally.
 
 ## 7. Summary
 

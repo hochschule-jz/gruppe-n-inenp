@@ -49,7 +49,7 @@ API URL at runtime — it is not included in the production bundle.
 ## Configure the live endpoint
 
 ```bash
-aws cloudformation describe-stacks --stack-name drive-decide --region us-east-1 \
+aws cloudformation describe-stacks --stack-name drive-and-decide --region us-east-1 \
   --query "Stacks[0].Outputs[?OutputKey=='ApiUrl'].OutputValue" --output text
 ```
 
