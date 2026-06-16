@@ -107,7 +107,10 @@ def _build_parser() -> argparse.ArgumentParser:
     p.add_argument("--duration", type=float, metavar="MIN", help="override profile durationMin")
     p.add_argument("--time-scale", type=float, dest="time_scale",
                    help="override profile timeScale (compress simulated time)")
-    p.add_argument("--qos", type=int, choices=[0, 1], default=0, help="MQTT QoS (default: 0)")
+    p.add_argument("--qos", type=int, choices=[0, 1], default=None,
+                   help="MQTT QoS (default: 1 for aws, 0 for dry-run). "
+                        "QoS 1 ack-waits per message, so the t0 snapshot burst is "
+                        "not dropped by IoT Core's per-connection publish limit.")
     p.add_argument("--no-initial-snapshot", action="store_false", dest="emit_initial",
                    help="do not publish the t0 snapshot of all spots")
     p.add_argument("--realtime", action=argparse.BooleanOptionalAction, default=None,
@@ -140,6 +143,7 @@ def main(argv: list[str] | None = None) -> int:
         return 2
 
     realtime = (args.transport == "aws") if args.realtime is None else args.realtime
+    qos = (1 if args.transport == "aws" else 0) if args.qos is None else args.qos
 
     if args.transport == "aws":
         from .config import ConfigError, load_mqtt_config
@@ -168,14 +172,14 @@ def main(argv: list[str] | None = None) -> int:
     print(
         f"[loadgen] profile={profile.name} spots={profile.spots} "
         f"targetUtil={profile.target_util} dwellMin={profile.dwell_mean_min} "
-        f"transport={args.transport} realtime={realtime} qos={args.qos}",
+        f"transport={args.transport} realtime={realtime} qos={qos}",
         file=sys.stderr,
     )
 
     try:
         stats = run_load(
             profile, publisher,
-            qos=args.qos, emit_initial=args.emit_initial,
+            qos=qos, emit_initial=args.emit_initial,
             realtime=realtime, transport=args.transport,
         )
     except KeyboardInterrupt:
