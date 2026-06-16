@@ -1,6 +1,6 @@
 {
   "name": "offpeak",
-  "spots": 350,
+  "spots": 250,
   "targetUtil": 0.35,
   "dwellMeanMin": 140,
   "durationMin": 60,

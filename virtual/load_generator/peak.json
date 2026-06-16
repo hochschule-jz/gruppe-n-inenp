@@ -1,6 +1,6 @@
 {
   "name": "peak",
-  "spots": 350,
+  "spots": 250,
   "targetUtil": 0.88,
   "dwellMeanMin": 90,
   "durationMin": 60,
