@@ -369,9 +369,22 @@ export function App() {
               <div className="card-eyebrow">
                 <span>{t.scenario === "modell" ? "Belegung · Stellplätze" : "Belegung · Ebenen"}</span>
               </div>
-              <div className="legend">
-                <span className="lg"><i className="sw free" />Frei</span>
-                <span className="lg"><i className="sw occ" />Belegt</span>
+              <div className="occ-head-right">
+                {!isModell && (
+                  <label className="size-ctl" title="Anzahl der simulierten Stellplätze">
+                    <span className="size-lbl">Plätze</span>
+                    <input
+                      type="range" min={20} max={500} step={10}
+                      value={t.garageSize}
+                      onChange={(e) => setTweak("garageSize", Number(e.target.value))}
+                    />
+                    <span className="size-val mono">{t.garageSize}</span>
+                  </label>
+                )}
+                <div className="legend">
+                  <span className="lg"><i className="sw free" />Frei</span>
+                  <span className="lg"><i className="sw occ" />Belegt</span>
+                </div>
               </div>
             </div>
             {isModell
