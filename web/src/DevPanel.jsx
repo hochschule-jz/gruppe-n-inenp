@@ -52,12 +52,6 @@ export function DevPanel({ t, setTweak }) {
       </div>
 
       <div style={row}>
-        <span style={lbl}>Garagengröße · {t.garageSize}</span>
-        <input type="range" min={20} max={500} step={10} value={t.garageSize}
-          onChange={(e) => setTweak("garageSize", Number(e.target.value))} />
-      </div>
-
-      <div style={row}>
         <span style={lbl}>Intervall · {(t.pollMs / 1000).toFixed(1)} s</span>
         <input type="range" min={600} max={6000} step={100} value={t.pollMs}
           onChange={(e) => setTweak("pollMs", Number(e.target.value))} />
@@ -71,13 +65,6 @@ export function DevPanel({ t, setTweak }) {
           <option value="yellow">Gelb — eng</option>
           <option value="red">Rot — besetzt</option>
         </select>
-      </div>
-
-      <div style={row}>
-        <span style={lbl}>API-URL (Modell)</span>
-        <input style={field} type="text" value={t.apiUrl}
-          placeholder="https://…/garages/garage1/utilization"
-          onChange={(e) => setTweak("apiUrl", e.target.value)} />
       </div>
 
       <label style={{ ...row, flexDirection: "row", alignItems: "center", gap: 8, cursor: "pointer" }}>

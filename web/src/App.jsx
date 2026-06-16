@@ -1,8 +1,8 @@
-/* Drive & Decide — app shell, simulation engine, layout. */
-import { useState, useEffect, useRef, useCallback } from "react";
+/* Drive & Decide — app shell, backend polling, layout. */
+import { useState, useEffect, useCallback, useRef } from "react";
 import { STATUS_DE, TrafficLight, StatChip, Heatmap, BayGrid, Sparkline } from "./components.jsx";
 import { DevPanel } from "./DevPanel.jsx";
-import { DEFAULTS, API_PLACEHOLDER } from "./config.js";
+import { DEFAULTS, API_PLACEHOLDER, GARAGE_IDS, utilizationUrl, loadgenUrl } from "./config.js";
 
 /* ---- config state ----
    Replaces the design-tool tweak store. The header controls (scenario, dark)
@@ -21,90 +21,12 @@ function useConfig() {
      green  : util < 0.70
      yellow : 0.70 <= util <= 0.90
      red    : util > 0.90
-   On the Modell view the backend's own `light` field is used directly;
-   the simulated Großgarage classifies client-side with this same fn. */
+   Both views use the backend's own `light` field directly; if it is ever
+   missing this fn re-derives it locally (never silently defaulting to green). */
 function classify(util) {
   if (util > 0.90) return "red";
   if (util >= 0.70) return "yellow";
   return "green";
-}
-
-/* ---- simulation hook ---- */
-function useSimulation({ size, pollMs, autoDrift }) {
-  const [spots, setSpots] = useState(() => seed(size));
-  const [tick, setTick] = useState(0);
-  const [lastUpdate, setLastUpdate] = useState(() => Date.now());
-  const [history, setHistory] = useState(() => [pctOcc(seed(size))]);
-  const targetRef = useRef(0.72);
-
-  // resize / scenario change -> reseed
-  useEffect(() => {
-    const s = seed(size);
-    setSpots(s);
-    setHistory([pctOcc(s)]);
-    targetRef.current = 0.7;
-    setLastUpdate(Date.now());
-  }, [size]);
-
-  // polling loop
-  useEffect(() => {
-    if (!autoDrift) return;
-    const id = setInterval(() => {
-      setSpots((prev) => {
-        const n = prev.length;
-        // random-walk the target occupancy within sensible bounds
-        let t = targetRef.current + (Math.random() - 0.48) * 0.07;
-        t = Math.max(0.45, Math.min(0.99, t));
-        targetRef.current = t;
-
-        const next = prev.slice();
-        const curOcc = next.filter(Boolean).length;
-        const wantOcc = Math.round(t * n);
-        let diff = wantOcc - curOcc;
-
-        // move toward target
-        const step = Math.max(1, Math.round(n * 0.03));
-        let moves = Math.min(Math.abs(diff), step);
-        while (moves > 0) {
-          const idx = Math.floor(Math.random() * n);
-          if (diff > 0 && !next[idx]) { next[idx] = true; moves--; }
-          else if (diff < 0 && next[idx]) { next[idx] = false; moves--; }
-          else { moves--; } // skip, keeps it from hanging on small garages
-        }
-        // a little organic churn so individual cells flicker
-        const churn = Math.max(1, Math.round(n * 0.015));
-        for (let c = 0; c < churn; c++) {
-          const a = Math.floor(Math.random() * n);
-          const b = Math.floor(Math.random() * n);
-          if (next[a] !== next[b]) { const tmp = next[a]; next[a] = next[b]; next[b] = tmp; }
-        }
-        return next;
-      });
-      setLastUpdate(Date.now());
-      setTick((k) => k + 1);
-    }, Math.max(400, pollMs));
-    return () => clearInterval(id);
-  }, [pollMs, autoDrift, size]);
-
-  // record utilization history on each tick
-  useEffect(() => {
-    setHistory((h) => {
-      const next = h.concat(pctOcc(spots));
-      return next.length > 48 ? next.slice(next.length - 48) : next;
-    });
-  }, [tick]); // eslint-disable-line
-
-  return { spots, lastUpdate, history };
-}
-
-function seed(n) {
-  const arr = new Array(n);
-  for (let i = 0; i < n; i++) arr[i] = Math.random() < 0.7;
-  return arr;
-}
-function pctOcc(arr) {
-  if (!arr.length) return 0;
-  return Math.round((arr.filter(Boolean).length / arr.length) * 100);
 }
 
 /* ---- small helpers ---- */
@@ -153,6 +75,13 @@ function useBackend({ url, pollMs, enabled }) {
   const [error, setError] = useState(null);
   const [everOk, setEverOk] = useState(false);
   const configured = !!url && !url.includes(API_PLACEHOLDER);
+
+  // Switching garages (url change) must not bleed the previous garage's
+  // readings / history into the new one.
+  useEffect(() => {
+    setSpots([]); setLight(null); setLastUpdate(0);
+    setHistory([]); setError(null); setEverOk(false);
+  }, [url]);
 
   useEffect(() => {
     if (!enabled || !configured) return;
@@ -234,34 +163,66 @@ export function App() {
   }, [t.dark]);
 
   const isModell = t.scenario === "modell";
-  const sim = useSimulation({
-    size: isModell ? 4 : t.garageSize, pollMs: t.pollMs,
-    autoDrift: !isModell,
-  });
+  const garageId = GARAGE_IDS[t.scenario] || "garage1";
   const backend = useBackend({
-    url: t.apiUrl, pollMs: t.pollMs, enabled: isModell,
+    url: utilizationUrl(garageId), pollMs: t.pollMs, enabled: true,
   });
+
+  // "Andrang simulieren" — start/stop a browser-driven load loop. On start we
+  // fire one full snapshot to seed the picture, then every tick re-roll a few
+  // spots at a target utilisation that random-walks, so occupancy and the
+  // traffic light drift smoothly over time (the open tab is the clock).
+  const [running, setRunning] = useState(false);
+  const loopRef = useRef(null);
+  const targetRef = useRef(0.5);
+
+  const post = useCallback((params) => {
+    const base = loadgenUrl(garageId);
+    if (!base) return;
+    const u = new URL(base);
+    Object.entries(params).forEach(([k, v]) => u.searchParams.set(k, v));
+    fetch(u, { method: "POST" }).catch(() => {});
+  }, [garageId]);
+
+  const stopLoop = useCallback(() => {
+    if (loopRef.current) { clearInterval(loopRef.current); loopRef.current = null; }
+    setRunning(false);
+  }, []);
+
+  const toggleLoad = useCallback(() => {
+    if (loopRef.current) { stopLoop(); return; }
+    targetRef.current = 0.5;
+    post({ mode: "snapshot", util: "0.500" });          // seed full baseline
+    loopRef.current = setInterval(() => {
+      const next = Math.min(0.95, Math.max(0.2,
+        targetRef.current + (Math.random() - 0.5) * 0.12));
+      targetRef.current = next;
+      post({ mode: "step", util: next.toFixed(3) });     // drift a few spots
+    }, 3000);
+    setRunning(true);
+  }, [post, stopLoop]);
+
+  // Clear the interval on unmount; stop the loop if we leave Großgarage.
+  useEffect(() => () => { if (loopRef.current) clearInterval(loopRef.current); }, []);
+  useEffect(() => { if (isModell) stopLoop(); }, [isModell, stopLoop]);
 
   const now = useNow(1000);
 
-  const usingBackend = isModell;
-  const hasData = !usingBackend || backend.everOk;
+  const hasData = backend.everOk;
 
-  // connection state (Modell only)
-  let conn = null;
-  if (usingBackend) {
-    if (!backend.configured) conn = { state: "unconfigured" };
-    else if (!backend.everOk) conn = { state: backend.error ? "offline" : "connecting" };
-    else {
-      const age = now - backend.lastUpdate;
-      const staleAfter = Math.max(15000, t.pollMs * 4);
-      conn = (backend.error || age > staleAfter) ? { state: "stale", age } : { state: "live", age };
-    }
+  // backend connection state (both scenarios poll the live API)
+  let conn;
+  if (!backend.configured) conn = { state: "unconfigured" };
+  else if (!backend.everOk) conn = { state: backend.error ? "offline" : "connecting" };
+  else {
+    const age = now - backend.lastUpdate;
+    const staleAfter = Math.max(15000, t.pollMs * 4);
+    conn = (backend.error || age > staleAfter) ? { state: "stale", age } : { state: "live", age };
   }
 
-  const spots = usingBackend ? backend.spots : sim.spots;
-  const history = usingBackend ? backend.history : sim.history;
-  const lastUpdate = usingBackend ? (backend.lastUpdate || now) : sim.lastUpdate;
+  const spots = backend.spots;
+  const history = backend.history;
+  const lastUpdate = backend.lastUpdate || now;
 
   // Single source of truth: all counts derived directly from spots[].
   // Heatmap and BayGrid also iterate spots[], so these can never drift.
@@ -273,7 +234,7 @@ export function App() {
 
   const status = t.forceState !== "auto" ? t.forceState
     : !hasData ? (conn && conn.state === "connecting" ? "connecting" : "off")
-    : usingBackend && backend.light ? statusFromLight(backend.light)
+    : backend.light ? statusFromLight(backend.light)
     : classify(ratio);
   const meta = STATUS_DE[status] || STATUS_DE.off;
   const statusAccent = status === "green" ? "green"
@@ -303,12 +264,12 @@ export function App() {
               onClick={() => setTweak("scenario", "gross")}>Großgarage</button>
           </div>
           <div className="live-pill"
-            data-on={isModell ? (conn && conn.state === "live" ? "1" : "0") : "0"}
-            data-conn={isModell && conn ? conn.state : "sim"}>
+            data-on={conn && conn.state === "live" ? "1" : "0"}
+            data-conn={conn ? conn.state : "off"}>
             <span className="live-dot" />
-            {isModell ? "LIVE" : "SIM"}
+            LIVE
           </div>
-          {usingBackend && conn && (
+          {conn && (
             <div className="conn-pill" data-state={conn.state} title="Backend-Verbindung">
               <span className="conn-dot" />
               {connLabel(conn)}
@@ -318,6 +279,16 @@ export function App() {
             <span className="clock-time mono">{clockLabel(lastUpdate)}</span>
             <span className="clock-ago">{agoLabel(lastUpdate, now)}</span>
           </div>
+          {!isModell && (
+            <button
+              className="ghost-btn"
+              data-running={running ? "1" : "0"}
+              onClick={toggleLoad}
+              title={running ? "Andrang-Simulation stoppen" : "Andrang simulieren — Lastspitze erzeugen"}
+            >
+              {running ? "■" : "⚡︎"}
+            </button>
+          )}
           <button className="ghost-btn" onClick={() => setTweak("dark", !t.dark)} title="Dunkelmodus">
             {t.dark ? "☀" : "☾"}
           </button>
@@ -367,24 +338,11 @@ export function App() {
           <div className="card occ-card">
             <div className="occ-head">
               <div className="card-eyebrow">
-                <span>{t.scenario === "modell" ? "Belegung · Stellplätze" : "Belegung · Ebenen"}</span>
+                <span>{isModell ? "Belegung · Stellplätze" : "Belegung · Ebenen"}</span>
               </div>
-              <div className="occ-head-right">
-                {!isModell && (
-                  <label className="size-ctl" title="Anzahl der simulierten Stellplätze">
-                    <span className="size-lbl">Plätze</span>
-                    <input
-                      type="range" min={20} max={500} step={10}
-                      value={t.garageSize}
-                      onChange={(e) => setTweak("garageSize", Number(e.target.value))}
-                    />
-                    <span className="size-val mono">{t.garageSize}</span>
-                  </label>
-                )}
-                <div className="legend">
-                  <span className="lg"><i className="sw free" />Frei</span>
-                  <span className="lg"><i className="sw occ" />Belegt</span>
-                </div>
+              <div className="legend">
+                <span className="lg"><i className="sw free" />Frei</span>
+                <span className="lg"><i className="sw occ" />Belegt</span>
               </div>
             </div>
             {isModell
@@ -399,9 +357,8 @@ export function App() {
             </div>
             <Sparkline history={history} />
             <div className="trend-foot">
-              {isModell
-                ? <>Datenquelle: Backend · garage1 · Abfrage alle {(t.pollMs / 1000).toFixed(1)}&nbsp;s{conn && (conn.state === "stale" || conn.state === "offline") ? " · veraltet" : ""}</>
-                : <>Datenquelle: Simulation · Aktualisierung alle {(t.pollMs / 1000).toFixed(1)}&nbsp;s</>}
+              Datenquelle: Backend · {garageId} · Abfrage alle {(t.pollMs / 1000).toFixed(1)}&nbsp;s
+              {conn && (conn.state === "stale" || conn.state === "offline") ? " · veraltet" : ""}
             </div>
           </div>
         </section>

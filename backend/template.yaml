@@ -7,11 +7,19 @@ Parameters:
     Default: 4
     MinValue: 1
     Description: >-
-      Number of parking spots in the garage. Drives BOTH the validation range
-      check (a valid spotId is 1..TotalSpots) and the aggregation denominator
-      (utilisation = occupied / TotalSpots). Use 4 for the physical demo board;
-      set to 200 / 350 / 500 for the virtual load-generator scale runs (Phase 5).
-      Default 4 preserves the originally deployed behaviour.
+      Fallback spot count for any garageId NOT listed in GarageSpots. Drives BOTH
+      the validation range check (a valid spotId is 1..count) and the aggregation
+      denominator (utilisation = occupied / count). Default 4 preserves the
+      originally deployed behaviour for the physical demo board.
+  GarageSpots:
+    Type: String
+    Default: '{}'
+    Description: >-
+      Per-garage spot counts as a JSON object, e.g.
+      {"garage1":4,"garage2":250}. A garageId found here overrides TotalSpots,
+      so the 4-bay physical demo (garage1) and the 250-spot virtual load
+      generator (garage2) can run concurrently. Any garageId not listed falls
+      back to TotalSpots.
 
 Resources:
   ParkingStatusTable:
@@ -53,7 +61,8 @@ Resources:
       Environment:
         Variables:
           TABLE_NAME: ParkingStatus
-          MAX_SPOTS: !Sub '${TotalSpots}'
+          DEFAULT_SPOTS: !Sub '${TotalSpots}'
+          GARAGE_SPOTS: !Ref GarageSpots
       Code:
         ZipFile: |
           import json
@@ -62,11 +71,15 @@ Resources:
           import boto3
 
           TABLE_NAME = os.environ.get("TABLE_NAME", "ParkingStatus")
-          MAX_SPOTS = int(os.environ.get("MAX_SPOTS", "4"))
+          DEFAULT_SPOTS = int(os.environ.get("DEFAULT_SPOTS", "4"))
+          GARAGE_SPOTS = json.loads(os.environ.get("GARAGE_SPOTS", "{}"))
           ALLOWED_STATUS = {"occupied", "free"}
 
           dynamodb = boto3.resource("dynamodb")
           table = dynamodb.Table(TABLE_NAME)
+
+          def spots_for(garage_id):
+              return int(GARAGE_SPOTS.get(garage_id, DEFAULT_SPOTS))
 
           def _response(status_code, body):
               return {
@@ -89,8 +102,9 @@ Resources:
                       raise ValueError("garageId must not be empty")
                   if not sensor_id:
                       raise ValueError("sensorId must not be empty")
-                  if spot_id < 1 or spot_id > MAX_SPOTS:
-                      raise ValueError(f"spotId must be between 1 and {MAX_SPOTS}")
+                  max_spots = spots_for(garage_id)
+                  if spot_id < 1 or spot_id > max_spots:
+                      raise ValueError(f"spotId must be between 1 and {max_spots}")
                   if raw not in (0, 1):
                       raise ValueError("raw must be 0 or 1")
                   if status not in ALLOWED_STATUS:
@@ -153,7 +167,8 @@ Resources:
       Environment:
         Variables:
           TABLE_NAME: ParkingStatus
-          TOTAL_SPOTS: !Sub '${TotalSpots}'
+          DEFAULT_SPOTS: !Sub '${TotalSpots}'
+          GARAGE_SPOTS: !Ref GarageSpots
       Code:
         ZipFile: |
           import json
@@ -162,7 +177,8 @@ Resources:
           from decimal import Decimal
 
           TABLE_NAME = os.environ.get("TABLE_NAME", "ParkingStatus")
-          TOTAL_SPOTS = int(os.environ.get("TOTAL_SPOTS", "4"))
+          DEFAULT_SPOTS = int(os.environ.get("DEFAULT_SPOTS", "4"))
+          GARAGE_SPOTS = json.loads(os.environ.get("GARAGE_SPOTS", "{}"))
 
           dynamodb = boto3.resource("dynamodb")
           table = dynamodb.Table(TABLE_NAME)
@@ -205,7 +221,7 @@ Resources:
                       "sensorId": item.get("sensorId", "unknown")
                   })
 
-              total_spots = TOTAL_SPOTS
+              total_spots = int(GARAGE_SPOTS.get(garage_id, DEFAULT_SPOTS))
               free_count = max(total_spots - occupied_count, 0)
               utilization = occupied_count / total_spots if total_spots > 0 else 0
 
@@ -234,6 +250,124 @@ Resources:
                   },
                   "body": json.dumps(body, default=decimal_default)
               }
+      Tags:
+        - Key: Project
+          Value: DriveAndDecide
+        - Key: Environment
+          Value: Lab
+
+  # On-demand load burst, triggered from the web UI's "Andrang simulieren"
+  # button. Publishes a fresh randomised snapshot for one garage into IoT Core,
+  # so the data flows through the SAME pipeline as the physical board and the
+  # virtual load generator (TopicRule -> Validation -> DynamoDB). No new path.
+  LoadgenFunction:
+    Type: AWS::Lambda::Function
+    Properties:
+      FunctionName: drive-decide-loadgen
+      Runtime: python3.12
+      Handler: index.lambda_handler
+      Role: !Sub arn:aws:iam::${AWS::AccountId}:role/LabRole
+      MemorySize: 256
+      Timeout: 29
+      Architectures:
+        - x86_64
+      Environment:
+        Variables:
+          DEFAULT_SPOTS: !Sub '${TotalSpots}'
+          GARAGE_SPOTS: !Ref GarageSpots
+      Code:
+        ZipFile: |
+          import json
+          import os
+          import random
+          import time
+          from concurrent.futures import ThreadPoolExecutor
+
+          import boto3
+
+          DEFAULT_SPOTS = int(os.environ.get("DEFAULT_SPOTS", "4"))
+          GARAGE_SPOTS = json.loads(os.environ.get("GARAGE_SPOTS", "{}"))
+
+          # Resolve the account's IoT data endpoint once per cold start.
+          _endpoint = boto3.client("iot").describe_endpoint(
+              endpointType="iot:Data-ATS"
+          )["endpointAddress"]
+          iot_data = boto3.client("iot-data", endpoint_url=f"https://{_endpoint}")
+
+          def spots_for(garage_id):
+              return int(GARAGE_SPOTS.get(garage_id, DEFAULT_SPOTS))
+
+          def _response(status_code, body):
+              return {
+                  "statusCode": status_code,
+                  "headers": {
+                      "Content-Type": "application/json",
+                      "Access-Control-Allow-Origin": "*"
+                  },
+                  "body": json.dumps(body)
+              }
+
+          def lambda_handler(event, context):
+              qs = event.get("queryStringParameters") or {}
+              garage_id = str(qs.get("garageId") or "garage2")
+              n = spots_for(garage_id)
+
+              # Target utilisation: explicit ?util=0.x, else a random level so
+              # one-off bursts move the light across green/yellow/red.
+              try:
+                  target = float(qs["util"]) if "util" in qs else random.uniform(0.3, 0.95)
+              except (TypeError, ValueError):
+                  target = random.uniform(0.3, 0.95)
+              target = max(0.0, min(1.0, target))
+
+              # mode=snapshot (default): rewrite every spot to a fresh occupancy
+              #   near `target` (one click = one full picture).
+              # mode=step: re-roll only a few random spots at P(occupied)=target,
+              #   so a browser loop can drift utilisation smoothly over time.
+              mode = str(qs.get("mode") or "snapshot")
+              now = int(time.time() * 1000)
+
+              if mode == "step":
+                  try:
+                      churn = int(qs["churn"])
+                  except (KeyError, TypeError, ValueError):
+                      churn = max(1, round(n * 0.05))
+                  churn = max(1, min(churn, n))
+                  picked = random.sample(range(1, n + 1), churn)
+                  changes = {s: (random.random() < target) for s in picked}
+              else:
+                  occupied_n = int(round(n * target))
+                  occupied = set(random.sample(range(1, n + 1), occupied_n))
+                  changes = {s: (s in occupied) for s in range(1, n + 1)}
+
+              def publish(item):
+                  spot_id, occ = item
+                  payload = {
+                      "sensorId": "web-loadgen",
+                      "garageId": garage_id,
+                      "spotId": spot_id,
+                      "ts": now,
+                      "raw": 1 if occ else 0,
+                      "status": "occupied" if occ else "free"
+                  }
+                  iot_data.publish(
+                      topic=f"parking/{garage_id}/spot/{spot_id}",
+                      qos=1,
+                      payload=json.dumps(payload, separators=(",", ":"))
+                  )
+
+              with ThreadPoolExecutor(max_workers=20) as pool:
+                  list(pool.map(publish, changes.items()))
+
+              return _response(200, {
+                  "message": "load generated",
+                  "garageId": garage_id,
+                  "mode": mode,
+                  "spots": n,
+                  "published": len(changes),
+                  "occupiedPublished": sum(1 for v in changes.values() if v),
+                  "targetUtil": round(target, 3)
+              })
       Tags:
         - Key: Project
           Value: DriveAndDecide
@@ -311,6 +445,22 @@ Resources:
       RouteKey: GET /garages/{garageId}/utilization
       Target: !Sub integrations/${AggregationIntegration}
 
+  LoadgenIntegration:
+    Type: AWS::ApiGatewayV2::Integration
+    Properties:
+      ApiId: !Ref DriveDecideApi
+      IntegrationType: AWS_PROXY
+      IntegrationMethod: POST
+      PayloadFormatVersion: '2.0'
+      IntegrationUri: !Sub arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${LoadgenFunction.Arn}/invocations
+
+  LoadgenRoute:
+    Type: AWS::ApiGatewayV2::Route
+    Properties:
+      ApiId: !Ref DriveDecideApi
+      RouteKey: POST /loadgen/run
+      Target: !Sub integrations/${LoadgenIntegration}
+
   DefaultStage:
     Type: AWS::ApiGatewayV2::Stage
     Properties:
@@ -328,6 +478,14 @@ Resources:
       Action: lambda:InvokeFunction
       Principal: apigateway.amazonaws.com
       SourceArn: !Sub arn:aws:execute-api:${AWS::Region}:${AWS::AccountId}:${DriveDecideApi}/*/GET/garages/*/utilization
+
+  LoadgenInvokePermissionForApiGateway:
+    Type: AWS::Lambda::Permission
+    Properties:
+      FunctionName: !GetAtt LoadgenFunction.Arn
+      Action: lambda:InvokeFunction
+      Principal: apigateway.amazonaws.com
+      SourceArn: !Sub arn:aws:execute-api:${AWS::Region}:${AWS::AccountId}:${DriveDecideApi}/*/POST/loadgen/run
 
   # --- Static web hosting (web/dist) ---------------------------------------
   # S3 website endpoint serving the built Vite app. Public read-only; the app
@@ -373,6 +531,12 @@ Outputs:
   ApiUrl:
     Description: Public utilization endpoint for garage1
     Value: !Sub https://${DriveDecideApi}.execute-api.${AWS::Region}.amazonaws.com/garages/garage1/utilization
+  ApiBase:
+    Description: API base URL (no path) for the web app's VITE_API_BASE
+    Value: !Sub https://${DriveDecideApi}.execute-api.${AWS::Region}.amazonaws.com
+  LoadgenUrl:
+    Description: POST endpoint that generates a load burst (web UI button)
+    Value: !Sub https://${DriveDecideApi}.execute-api.${AWS::Region}.amazonaws.com/loadgen/run
   IoTTopicPattern:
     Description: MQTT topic pattern for parking spot status messages
     Value: parking/garage1/spot/<spotId>
