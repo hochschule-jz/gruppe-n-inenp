@@ -298,8 +298,8 @@
   .bay {
     border-radius: 14px; padding: 18px 16px 16px; min-height: 150px;
     display: flex; flex-direction: column; gap: 10px;
-    background: color-mix(in srgb, var(--green) 9%, var(--surface));
-    border: 1.5px solid color-mix(in srgb, var(--green) 32%, transparent);
+    background: color-mix(in srgb, var(--cell-free) 70%, var(--surface));
+    border: 1.5px solid color-mix(in srgb, var(--green) 45%, transparent);
     transition: background-color .45s ease, border-color .45s ease;
   }
   .bay.occ { background: var(--cell-occ); border-color: transparent; }
@@ -319,7 +319,7 @@
   .bay-sensor i { display: block; width: 10px; height: 10px; border-radius: 50%; background: var(--green); box-shadow: 0 0 10px var(--green-glow); }
   .bay.occ .bay-sensor i { background: var(--red); box-shadow: 0 0 10px var(--red-glow); }
   .bay-icon { flex: 1; display: grid; place-items: center; font-size: 38px; filter: grayscale(.1); }
-  .bay-status { font-size: 13px; font-weight: 700; letter-spacing: .1em; color: var(--green); }
+  .bay-status { font-size: 13px; font-weight: 700; letter-spacing: .1em; color: color-mix(in srgb, var(--green) 70%, #000); }
   .bay.occ .bay-status { color: rgba(255,255,255,.92); }
 
   /* ---------- Trend ---------- */
