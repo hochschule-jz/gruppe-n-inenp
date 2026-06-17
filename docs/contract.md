@@ -9,19 +9,24 @@ agreement, and update this file when you do.
 
 ## 0.1 Pin map
 
-Fixed, non-overlapping GPIOs so all four sensors fit one board for the demo. GPIO
-32/33/25/26 are input-capable and free of boot-strapping/flash conflicts.
+The as-built demo prototype carries all four TCRT5000 sensors on one ESP32, one
+under each marked spot. These GPIOs are input-capable and free of boot-strapping
+conflicts (none are strapping pins 0/2/5/12/15, none are input-only 34–39).
 
-| Spot | GPIO | Dev board |
-|------|------|-----------|
-| 1 | GPIO 32 | A |
-| 2 | GPIO 33 | A |
-| 3 | GPIO 25 | B |
-| 4 | GPIO 26 | B |
+| Spot | GPIO |
+|------|------|
+| 1 | GPIO 4 |
+| 2 | GPIO 16 |
+| 3 | GPIO 18 |
+| 4 | GPIO 19 |
 
-> GPIO 25/26 are ADC2/DAC pins — fine as **digital** inputs (what we use). Do not
-> `analogRead` them while WiFi is active (ADC2 is unavailable during WiFi). We use
-> `digitalRead`, so this is a non-issue.
+> GPIO 4 is an ADC2/touch pin — fine as a **digital** input (what we use). Do not
+> `analogRead` it while WiFi is active (ADC2 is unavailable during WiFi); we use
+> `digitalRead`, so this is a non-issue. On a plain ESP32-WROOM (esp32dev) GPIO
+> 16/17 are free (on WROVER modules they are reserved for PSRAM).
+>
+> This replaces the originally planned GPIO 32/33/25/26 — the built hardware is
+> authoritative.
 
 ---
 
@@ -74,14 +79,14 @@ Both people write identical code except their two `SPOTS[]` entries and their pe
 array from 2 to 4 entries. Nothing else changes.**
 
 ```cpp
-// include/spots.h — the shared skeleton.
+// include/spots.h — the shared skeleton. The demo board carries all four spots.
 struct Spot { int spotId; int gpio; bool occupiedWhenHigh; };
 
 Spot SPOTS[] = {
-  { 1, 32, true },   // board A (dev)
-  { 2, 33, true },
-  // board B (dev):  { 3, 25, true }, { 4, 26, true }
-  // DEMO board:     all four entries present
+  { 1, 4,  true },
+  { 2, 16, true },
+  { 3, 18, true },
+  { 4, 19, true },
 };
 const int SPOT_COUNT = sizeof(SPOTS) / sizeof(SPOTS[0]);
 ```

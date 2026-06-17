@@ -23,6 +23,6 @@ and publishing state changes over MQTT to AWS IoT Core.
 - Serial monitor: 🔌, or `pio device monitor` (115200 baud).
 
 ## Contract (locked in Phase 0 — see `docs/contract.md`)
-- Pin map: spot 1→GPIO32, 2→GPIO33, 3→GPIO25, 4→GPIO26 (see `docs/contract.md`).
+- Pin map: spot 1→GPIO4, 2→GPIO16, 3→GPIO18, 4→GPIO19 (see `docs/contract.md`).
 - Topic: `parking/<garageId>/spot/<spotId>` (e.g. `parking/garage1/spot/3`).
 - Power TCRT5000 modules from **3V3**, not 5V (DO pulls up to VCC; 5V over-drives the GPIO).

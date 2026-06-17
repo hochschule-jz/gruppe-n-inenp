@@ -11,20 +11,28 @@
 #include "secrets.h"
 
 // ---------- Sensor-Konfiguration ----------
+// Actual demo-box wiring: four TCRT5000 sensors on GPIO 4/16/18/19, one under
+// each marked spot — matches docs/contract.md §0.1. All four read HIGH when a
+// spot is occupied (occupiedWhenHigh=true), matching the previously tested firmware.
 struct Spot {
   int spotId;
   int gpio;
+  bool occupiedWhenHigh;  // does an occupied spot read HIGH on this sensor?
 };
 
 Spot SPOTS[] = {
-  {1, 4},
-  {2, 18}
+  {1, 4, true},
+  {2, 16, true},
+  {3, 18, true},
+  {4, 19, true}
 };
 
 const int SPOT_COUNT = sizeof(SPOTS) / sizeof(SPOTS[0]);
 
-// Bei deinem Sensor: 0 = free, 1 = occupied
-const int DETECTED_LEVEL = HIGH;
+// Derive occupancy from a raw digitalRead, honouring each spot's polarity.
+bool isOccupied(const Spot& s, int raw) {
+  return (raw == HIGH) == s.occupiedWhenHigh;
+}
 
 // Letzter bekannter Zustand
 bool lastOccupied[SPOT_COUNT];
@@ -140,7 +148,7 @@ void setupSensors() {
     pinMode(SPOTS[i].gpio, INPUT);
 
     int raw = digitalRead(SPOTS[i].gpio);
-    bool occupied = (raw == DETECTED_LEVEL);
+    bool occupied = isOccupied(SPOTS[i], raw);
 
     lastOccupied[i] = occupied;
 
@@ -158,7 +166,7 @@ void publishInitialStates() {
 
   for (int i = 0; i < SPOT_COUNT; i++) {
     int raw = digitalRead(SPOTS[i].gpio);
-    bool occupied = (raw == DETECTED_LEVEL);
+    bool occupied = isOccupied(SPOTS[i], raw);
 
     publishSpotStatus(SPOTS[i].spotId, raw, occupied);
     delay(300);
@@ -168,7 +176,7 @@ void publishInitialStates() {
 void checkSensorsAndPublishChanges() {
   for (int i = 0; i < SPOT_COUNT; i++) {
     int raw = digitalRead(SPOTS[i].gpio);
-    bool occupied = (raw == DETECTED_LEVEL);
+    bool occupied = isOccupied(SPOTS[i], raw);
 
     if (occupied != lastOccupied[i]) {
       Serial.print("Change detected on Spot ");
