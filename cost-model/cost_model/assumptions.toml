@@ -1,0 +1,66 @@
+# Drive & Decide — cost-model assumptions (SINGLE SOURCE OF TRUTH)
+#
+# ┌──────────────────────────────────────────────────────────────────────────┐
+# │ ALL VALUES BELOW ARE ILLUSTRATIVE PLACEHOLDERS. Replace each one with real │
+# │ data and record the source in cost-model/README.md before citing results.  │
+# │ Lines tagged "VERIFY" must be confirmed against the named source.          │
+# └──────────────────────────────────────────────────────────────────────────┘
+
+[meta]
+horizon_years = 5
+currency = "EUR"
+discount_rate = 0.0        # 0 = undiscounted (paper default). Set e.g. 0.07 for an NPV cross-check.
+
+# --- CAPEX (one-time) -------------------------------------------------------
+[capex]
+sensor_eur            = 2.50    # TCRT5000 IR module, bulk price        — VERIFY (vendor quote)
+wiring_eur_per_spot   = 3.00    # cable + connectors per spot           — VERIFY (vendor quote)
+install_eur_per_spot  = 12.00   # labour ~0.25 h/spot x ~48 EUR/h       — VERIFY (Austrian trade rate)
+sensors_per_controller = 16     # sensors per ESP32 node (GPIO/expander) — VERIFY (your node design)
+controller_eur        = 14.00   # ESP32 + enclosure per node            — VERIFY (vendor quote)
+network_fixed_eur     = 1500.0  # gateway/switch/backbone, one-time     — VERIFY (network design)
+cloud_setup_eur       = 2000.0  # one-time engineering (IaC, certs)      — VERIFY (your hours x rate)
+
+# --- AWS unit prices + technical constants ----------------------------------
+# VERIFY EVERY PRICE against the AWS Pricing Calculator for your region
+# (us-east-1 for the Learner Lab; consider eu-central-1/Frankfurt for a Vienna operator).
+[aws]
+iot_messaging_eur_per_million        = 1.00        # IoT Core messaging          — VERIFY
+iot_connection_eur_per_million_min   = 0.08        # IoT Core connectivity        — VERIFY
+lambda_eur_per_million_req           = 0.20        # Lambda requests              — VERIFY
+lambda_eur_per_gb_second             = 0.0000166667 # Lambda compute (GB-second)  — VERIFY
+lambda_mem_gb                        = 0.128       # function memory (128 MB)     — matches template.yaml
+lambda_ms_per_invoke                 = 30.0        # mean duration per invoke (ms) — measure in CloudWatch
+ddb_write_eur_per_million            = 1.25        # DynamoDB on-demand WRU        — VERIFY
+ddb_read_eur_per_million             = 0.25        # DynamoDB on-demand RRU        — VERIFY
+ddb_storage_eur_per_gb_month         = 0.25        # DynamoDB storage              — VERIFY
+apigw_eur_per_million_req            = 1.00        # API Gateway HTTP API          — VERIFY
+data_transfer_eur_per_gb            = 0.09        # data transfer out             — VERIFY
+item_bytes                           = 150         # size of one ParkingStatus item (contract payload)
+
+# --- Non-cloud recurring OPEX ----------------------------------------------
+[non_cloud]
+maintenance_pct_of_capex     = 0.05   # annual maintenance as % of CAPEX  — VERIFY (literature/assumption)
+sensor_replacement_pct       = 0.05   # annual fraction of sensors replaced — VERIFY (sensor lifetime)
+power_eur_per_controller_year = 3.00  # power per controller node / year   — VERIFY (W x tariff)
+
+# --- Usage drivers ----------------------------------------------------------
+[load]
+events_per_spot_per_day = 20.0   # occupancy STATE-CHANGES per spot/day. Best: derive from a
+                                 # load_generator manifest (see README) or counted real data.
+dashboard_consumers     = 1.0    # number of clients polling the API continuously
+poll_interval_s         = 2.5    # poll cadence (matches the web app default)
+hours_open_per_day      = 16.0   # garage operating hours
+
+# --- Benefit side -----------------------------------------------------------
+[benefits]
+parking_tariff_eur_per_space_hour = 3.50  # real Vienna garage tariff      — VERIFY (operator price list)
+baseline_utilization              = 0.70  # utilisation without the system  — VERIFY (literature/operator)
+uplift_pp_pessimistic             = 1.0   # +utilisation in percentage points — literature scenario
+uplift_pp_base                    = 3.0   # base scenario                    — literature (wang/sarker)
+uplift_pp_optimistic              = 6.0   # optimistic scenario              — literature
+dynamic_pricing_uplift_pct        = 2.0   # extra revenue on baseline (%)    — VERIFY (elasticity, hassine)
+
+# --- Scale sweep ------------------------------------------------------------
+[scale]
+spot_counts = [200, 350, 500]    # garage sizes from the use case (methodology.tex §Use Case)

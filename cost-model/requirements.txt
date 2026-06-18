@@ -1,0 +1,6 @@
+# The cost model's CORE needs only the Python standard library (3.11+ for tomllib) —
+# `python -m cost_model` and the Markdown/CSV report run with no third-party packages.
+#
+# This file sets up the dev/figure tooling:
+pytest>=8.0          # run the tests
+matplotlib>=3.8      # only for `python -m cost_model --figures` (cost_model/figures.py)
