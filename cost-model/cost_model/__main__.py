@@ -48,7 +48,7 @@ def main(argv: list[str] | None = None) -> int:
     print(scale_table_md(rows, a.currency))
     print(f"\n## One-way sensitivity — ROI at spots={spots}, ±{args.delta:.0%}\n")
     print(tornado_table_md(one_way_sensitivity(a, spots, args.scenario, args.delta)))
-    print("\n> ⚠️ All inputs are placeholders until verified — see cost-model/README.md.")
+    print("\n> Inputs sourced 2026-06; benefit uplift is a scenario range — see assumptions.toml for per-value sources.")
 
     if args.csv:
         write_scale_csv(args.csv, rows)

@@ -1,0 +1,25 @@
+{
+  "profile": "peak",
+  "transport": "dry-run",
+  "spots": 400,
+  "targetUtil": 0.88,
+  "dwellMeanMin": 90.0,
+  "arrivalRatePerSpotPerSec": 0.0013580246913580246,
+  "departureRatePerSpotPerSec": 0.00018518518518518518,
+  "seed": 42,
+  "durationSeconds": 3600.0,
+  "timeScale": 60.0,
+  "sendSeconds": 60.0,
+  "initialSnapshotMessages": 400,
+  "initialSnapshotUtil": 0.865,
+  "transitionMessages": 443,
+  "occupiedMessages": 571,
+  "freeMessages": 272,
+  "totalMessages": 843,
+  "messagesPerSecond": 14.05,
+  "awsUsageEstimate": {
+    "iotMessages": 843,
+    "validationLambdaInvocations": 843,
+    "dynamodbWrites": 843
+  }
+}

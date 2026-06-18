@@ -4,8 +4,9 @@ Every input lives in ``assumptions.toml`` so the model stays reproducible and ea
 in the paper traces back to exactly one documented value. Parsed read-only with the stdlib
 ``tomllib`` (Python 3.11+), so the core model has no third-party dependencies.
 
-All monetary values are in the currency given by ``[meta].currency`` (EUR). AWS unit prices
-are **placeholders** until verified against the AWS Pricing Calculator — see the README.
+All monetary values are in the currency given by ``[meta].currency`` (EUR). AWS unit prices are
+AWS list-tier figures (eu-central-1 intent, 2026-06) converted USD->EUR; re-verify in the AWS
+Pricing Calculator. Per-value sources are documented inline in ``assumptions.toml``.
 """
 
 from __future__ import annotations

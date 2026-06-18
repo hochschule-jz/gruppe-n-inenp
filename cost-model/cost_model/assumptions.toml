@@ -1,10 +1,11 @@
 # Drive & Decide — cost-model assumptions (SINGLE SOURCE OF TRUTH)
 #
-# ┌──────────────────────────────────────────────────────────────────────────┐
-# │ ALL VALUES BELOW ARE ILLUSTRATIVE PLACEHOLDERS. Replace each one with real │
-# │ data and record the source in cost-model/README.md before citing results.  │
-# │ Lines tagged "VERIFY" must be confirmed against the named source.          │
-# └──────────────────────────────────────────────────────────────────────────┘
+# Values filled 2026-06 from the source cited per line: AWS official pricing,
+# a real Vienna operator tariff, Austrian statistics / trade rates, vendor
+# price lists, and peer-reviewed smart-parking literature (in references.bib).
+# AWS USD prices converted at 1 EUR = 1.08 USD (ECB reference range, 2026-06).
+#   ASSUMPTION = engineering/scenario estimate, not a measurement.
+#   MEASURE    = replace with a CloudWatch / Cost Explorer figure when available.
 
 [meta]
 horizon_years = 5
@@ -13,53 +14,54 @@ discount_rate = 0.0        # 0 = undiscounted (paper default). Set e.g. 0.07 for
 
 # --- CAPEX (one-time) -------------------------------------------------------
 [capex]
-sensor_eur            = 2.50    # TCRT5000 IR module, bulk price        — VERIFY (vendor quote)
-wiring_eur_per_spot   = 3.00    # cable + connectors per spot           — VERIFY (vendor quote)
-install_eur_per_spot  = 12.00   # labour ~0.25 h/spot x ~48 EUR/h       — VERIFY (Austrian trade rate)
-sensors_per_controller = 16     # sensors per ESP32 node (GPIO/expander) — VERIFY (your node design)
-controller_eur        = 14.00   # ESP32 + enclosure per node            — VERIFY (vendor quote)
-network_fixed_eur     = 1500.0  # gateway/switch/backbone, one-time     — VERIFY (network design)
-cloud_setup_eur       = 2000.0  # one-time engineering (IaC, certs)      — VERIFY (your hours x rate)
+sensor_eur            = 0.80    # TCRT5000 IR module — vendor (createc3d EUR 0.58, Reichelt DEBO-IR), low volume
+wiring_eur_per_spot   = 3.00    # cable + connectors per spot — ASSUMPTION (install design)
+install_eur_per_spot  = 16.00   # 0.2 h/spot x ~80 EUR/h — Arbeiterkammer OOE 2025 (Elektromonteure 64.8-115.3 EUR/h)
+sensors_per_controller = 16     # sensors per ESP32 node (GPIO + expander) — ASSUMPTION (node design)
+controller_eur        = 12.00   # ESP32-DevKitC (~9 EUR, BerryBase/DigiKey) + enclosure (~3 EUR)
+network_fixed_eur     = 1500.0  # gateway/switch/backbone, one-time — ASSUMPTION (network design)
+cloud_setup_eur       = 2000.0  # one-time engineering (IaC, certs), ~25 h x ~80 EUR — ASSUMPTION
 
 # --- AWS unit prices + technical constants ----------------------------------
-# VERIFY EVERY PRICE against the AWS Pricing Calculator for your region
-# (us-east-1 for the Learner Lab; consider eu-central-1/Frankfurt for a Vienna operator).
+# AWS pricing pages (eu-central-1 intent for a Vienna operator), accessed 2026-06,
+# USD->EUR at 1 EUR = 1.08 USD. OPEX is a minor lever (see sensitivity tornado),
+# so the standard-tier list prices are sufficient; re-verify in the AWS calculator.
 [aws]
-iot_messaging_eur_per_million        = 1.00        # IoT Core messaging          — VERIFY
-iot_connection_eur_per_million_min   = 0.08        # IoT Core connectivity        — VERIFY
-lambda_eur_per_million_req           = 0.20        # Lambda requests              — VERIFY
-lambda_eur_per_gb_second             = 0.0000166667 # Lambda compute (GB-second)  — VERIFY
-lambda_mem_gb                        = 0.128       # function memory (128 MB)     — matches template.yaml
-lambda_ms_per_invoke                 = 30.0        # mean duration per invoke (ms) — measure in CloudWatch
-ddb_write_eur_per_million            = 1.25        # DynamoDB on-demand WRU        — VERIFY
-ddb_read_eur_per_million             = 0.25        # DynamoDB on-demand RRU        — VERIFY
-ddb_storage_eur_per_gb_month         = 0.25        # DynamoDB storage              — VERIFY
-apigw_eur_per_million_req            = 1.00        # API Gateway HTTP API          — VERIFY
-data_transfer_eur_per_gb            = 0.09        # data transfer out             — VERIFY
+iot_messaging_eur_per_million        = 0.93        # IoT Core messaging ($1.00/M)
+iot_connection_eur_per_million_min   = 0.074       # IoT Core connectivity ($0.08/M-min)
+lambda_eur_per_million_req           = 0.185       # Lambda requests ($0.20/M)
+lambda_eur_per_gb_second             = 0.00001543  # Lambda compute ($0.0000166667/GB-s)
+lambda_mem_gb                        = 0.128       # function memory (128 MB) — matches template.yaml
+lambda_ms_per_invoke                 = 30.0        # mean duration per invoke (ms) — MEASURE (CloudWatch)
+ddb_write_eur_per_million            = 1.16        # DynamoDB on-demand WRU ($1.25/M)
+ddb_read_eur_per_million             = 0.23        # DynamoDB on-demand RRU ($0.25/M)
+ddb_storage_eur_per_gb_month         = 0.23        # DynamoDB storage ($0.25/GB-mo)
+apigw_eur_per_million_req            = 0.93        # API Gateway HTTP API ($1.00/M)
+data_transfer_eur_per_gb             = 0.083       # data transfer out ($0.09/GB)
 item_bytes                           = 150         # size of one ParkingStatus item (contract payload)
 
 # --- Non-cloud recurring OPEX ----------------------------------------------
 [non_cloud]
-maintenance_pct_of_capex     = 0.05   # annual maintenance as % of CAPEX  — VERIFY (literature/assumption)
-sensor_replacement_pct       = 0.05   # annual fraction of sensors replaced — VERIFY (sensor lifetime)
-power_eur_per_controller_year = 3.00  # power per controller node / year   — VERIFY (W x tariff)
+maintenance_pct_of_capex     = 0.05   # annual maintenance as % of CAPEX — ASSUMPTION (IT/infra norm)
+sensor_replacement_pct       = 0.10   # ~10 yr sensor life => ~10 %/yr — ASSUMPTION (datasheet/environment)
+power_eur_per_controller_year = 2.16  # ESP32 ~1 W x 8760 h x 0.247 EUR/kWh (E-Control/GPP 2025, commercial)
 
 # --- Usage drivers ----------------------------------------------------------
 [load]
-events_per_spot_per_day = 20.0   # occupancy STATE-CHANGES per spot/day. Best: derive from a
-                                 # load_generator manifest (see README) or counted real data.
-dashboard_consumers     = 1.0    # number of clients polling the API continuously
+events_per_spot_per_day = 26.58  # from load_generator peak-profile manifest (400 spots); --manifest overrides.
+                                 # Peak = upper estimate for OPEX; a daily peak/off-peak mix would be lower.
+dashboard_consumers     = 1.0    # API consumers polling continuously — ASSUMPTION (read-side driver)
 poll_interval_s         = 2.5    # poll cadence (matches the web app default)
-hours_open_per_day      = 16.0   # garage operating hours
+hours_open_per_day      = 16.0   # garage operating hours — ASSUMPTION
 
 # --- Benefit side -----------------------------------------------------------
 [benefits]
-parking_tariff_eur_per_space_hour = 3.50  # real Vienna garage tariff      — VERIFY (operator price list)
-baseline_utilization              = 0.70  # utilisation without the system  — VERIFY (literature/operator)
-uplift_pp_pessimistic             = 1.0   # +utilisation in percentage points — literature scenario
-uplift_pp_base                    = 3.0   # base scenario                    — literature (wang/sarker)
-uplift_pp_optimistic              = 6.0   # optimistic scenario              — literature
-dynamic_pricing_uplift_pct        = 2.0   # extra revenue on baseline (%)    — VERIFY (elasticity, hassine)
+parking_tariff_eur_per_space_hour = 4.50  # Vienna inner-city garage — WIPARK 2026 (4.70-4.90 inner, 3.20 outer)
+baseline_utilization              = 0.75  # typical urban garage occupancy — literature (wang) / operator
+uplift_pp_pessimistic             = 1.0   # +utilisation in percentage points — scenario (literature range)
+uplift_pp_base                    = 3.0   # base scenario — informed by wang/sarker/alaanzy (sensitivity range)
+uplift_pp_optimistic              = 6.0   # optimistic scenario — literature range
+dynamic_pricing_uplift_pct        = 2.0   # extra revenue on baseline (%) — conservative (hassine)
 
 # --- Scale sweep ------------------------------------------------------------
 [scale]

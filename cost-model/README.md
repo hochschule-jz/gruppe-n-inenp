@@ -5,8 +5,11 @@ feeding the Final Paper (`evaluation.tex`) and the presentation (slides 11–14)
 the method fixed in `Final Paper/section/methodology.tex` (§Kosten-Nutzen-Analyse).
 
 **Plan phases:** 3B.4 (data collection), 5 (measured cloud usage), 7 (model + sensitivity).
-**Status:** scaffolded and tested (22 tests). **All input values are illustrative placeholders**
-until replaced with real data — see [Real-data guide](#real-data-guide).
+**Status:** scaffolded and tested (22 tests). **Inputs filled 2026-06 from cited sources**
+(AWS list prices, WIPARK Vienna tariff, Austrian stats/trade rates, vendor lists, smart-parking
+literature) — per-value sources are inline in `assumptions.toml`. Benefit uplift is a scenario
+range, and AWS prices / Lambda duration should still be re-verified or measured — see
+[Real-data guide](#real-data-guide).
 
 ## Design
 
@@ -85,6 +88,39 @@ time-compressed `sendSeconds`). The backend's `GarageSpots` parameter lets you d
   only* (ignoring dynamic pricing and the soft pathways): how many extra percentage points of
   utilisation make benefits = costs. Compare that threshold to literature uplift ranges — far
   more defensible than asserting a benefit figure.
+
+## Sources (values filled 2026-06)
+
+Exact source per `assumptions.toml` value (the per-line comments mirror this).
+
+**Benefit & literature** (peer-reviewed; uplift kept as a conservative scenario range)
+- Parking tariff €4.50/h — WIPARK Vienna 2026: [Beethovenplatz €4.90](https://parkplatzsuche.at/parkplatz/174),
+  [TU Operngasse €4.70](https://parkplatzsuche.at/parkplatz/175),
+  [Enkplatz €3.20](https://parkplatzsuche.at/parkplatz/160); [WIPARK locations](https://www.wipark.at/standorte)
+- Utilisation uplift (1 / 3 / 6 pp) — [Wang et al. 2025](https://doi.org/10.1016/j.trpro.2025.06.045),
+  [Sarker et al. 2020](https://doi.org/10.3390/s20174669),
+  [Ala'anzy et al. 2025](https://doi.org/10.1038/s41598-025-15507-6)
+- Dynamic-pricing uplift (2 %) — [Hassine et al. 2024](https://doi.org/10.1177/03611981241231802)
+
+**Hardware (CAPEX)**
+- TCRT5000 sensor €0.58–0.80 — [createc3d](https://createc3d.com/tienda/en/inicio/1268-tcrt5000-ir-reflex-tracking-sensor-module-smart-car.html),
+  [Reichelt DEBO-IR](https://www.reichelt.com/de/en/developer-boards-8211-tracking-sensor-ctrt5000-debo-ir-ctrt5000-p282583.html)
+- ESP32-DevKitC ~€9 — [BerryBase](https://www.berrybase.de/en/esp32-nodemcu-development-board),
+  [DigiKey ESP32-DEVKITC-32E](https://www.digikey.com/en/products/detail/espressif-systems/ESP32-DEVKITC-32E/12091810)
+- Install labour €64.80–115.26/h — [Arbeiterkammer OÖ 2025](https://ooe.arbeiterkammer.at/service/testsundpreisvergleiche/preisvergleiche/Preisvergleich-Elektromonteure.html)
+
+**Operating (OPEX)**
+- Electricity €0.247/kWh (commercial) — [GlobalPetrolPrices / E-Control 2025](https://www.globalpetrolprices.com/Austria/electricity_prices/),
+  [E-Control Preismonitor](https://www.e-control.at/en/preismonitor)
+- AWS unit prices (standard tier, USD→EUR @1.08) — [IoT Core](https://aws.amazon.com/iot-core/pricing/),
+  [Lambda](https://aws.amazon.com/lambda/pricing/), [DynamoDB on-demand](https://aws.amazon.com/dynamodb/pricing/on-demand/),
+  [API Gateway](https://aws.amazon.com/api-gateway/pricing/), [Data transfer](https://aws.amazon.com/ec2/pricing/on-demand/)
+- AWS usage volume (events/spot/day) — modelled from the load-generator manifest (`virtual/run.json`)
+
+> **AWS CLI note (2026-06):** exact eu-central-1 prices and a *measured* Lambda duration
+> could not be pulled — the Learner Lab session's credentials are cancelled
+> (`voc-cancel-cred` explicitly denies `pricing:GetProducts` and `cloudwatch:GetMetricStatistics`).
+> Re-run from a fresh lab session to refine `aws.*` and `lambda_ms_per_invoke`.
 
 ## Real-data guide
 
