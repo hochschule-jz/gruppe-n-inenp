@@ -39,7 +39,7 @@ Lambdas:
 | Scenario | Deploy with |
 |----------|-------------|
 | Physical 4-sensor demo board | `TotalSpots=4` (default) |
-| Virtual load generator at scale (Phase 5) | `TotalSpots=200` / `350` / `500` |
+| Virtual load generator at scale (Phase 5) | `TotalSpots=200` / `400` / `500` |
 
 > **Why this matters for `virtual/load_generator/`:** at the default of 4, every
 > simulated spot beyond 4 is rejected before it reaches DynamoDB, so the stored
@@ -56,7 +56,7 @@ aws cloudformation deploy \
   --region us-east-1 \
   --stack-name drive-and-decide \
   --template-file backend/template.yaml \
-  --parameter-overrides TotalSpots=350 \
+  --parameter-overrides TotalSpots=400 \
   --capabilities CAPABILITY_NAMED_IAM
 ```
 
@@ -134,19 +134,21 @@ API` works.
 
 The template provisions an S3 website bucket and a public-read policy, but the
 **bundle is uploaded separately** (CloudFormation doesn't ship file contents).
-Because Vite bakes `VITE_API_URL` in at **build time**, build *after* the stack
-exists so the app points at the live API.
+Because Vite bakes `VITE_API_BASE` in at **build time**, build *after* the stack
+exists so the app points at the live API. `web/.env.production` is **gitignored**
+and written fresh from the stack's `ApiBase` output on every build — never
+hardcode an endpoint there. `deploy.sh` automates steps 1–4 below.
 
 ```bash
 # 1. Read the two outputs from the deployed stack
-API_URL=$(aws cloudformation describe-stacks --stack-name drive-and-decide --region us-east-1 \
-  --query "Stacks[0].Outputs[?OutputKey=='ApiUrl'].OutputValue" --output text)
+API_BASE=$(aws cloudformation describe-stacks --stack-name drive-and-decide --region us-east-1 \
+  --query "Stacks[0].Outputs[?OutputKey=='ApiBase'].OutputValue" --output text)
 BUCKET=$(aws cloudformation describe-stacks --stack-name drive-and-decide --region us-east-1 \
   --query "Stacks[0].Outputs[?OutputKey=='WebsiteBucketName'].OutputValue" --output text)
 
 # 2. Build with the live endpoint baked in
 cd web
-echo "VITE_API_URL=$API_URL" > .env.production
+echo "VITE_API_BASE=$API_BASE" > .env.production
 npm ci && npm run build
 
 # 3. Upload the static bundle

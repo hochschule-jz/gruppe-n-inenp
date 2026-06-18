@@ -22,7 +22,7 @@ Vite + React 18.
 web/
 ├── index.html          # Vite entry
 ├── vite.config.js      # base: "./" for static hosting
-├── .env.example        # VITE_API_URL template
+├── .env.example        # VITE_API_BASE template
 └── src/
     ├── main.jsx        # mount
     ├── App.jsx         # shell, simulation + backend hooks, layout
@@ -37,11 +37,11 @@ web/
 ```bash
 cd web
 npm install
-cp .env.example .env.local      # then set VITE_API_URL to the deployed endpoint
+cp .env.example .env.local      # then set VITE_API_BASE to the deployed endpoint
 npm run dev                     # http://localhost:5173
 ```
 
-Without a configured `VITE_API_URL`, the Modell view shows "Nicht konfiguriert"
+Without a configured `VITE_API_BASE`, the Modell view shows "Nicht konfiguriert"
 (the Großgarage simulation still runs). In dev a small **⚙ Dev** panel lets you
 switch scenarios, change the garage size / interval, force the light, or paste an
 API URL at runtime — it is not included in the production bundle.
@@ -50,10 +50,10 @@ API URL at runtime — it is not included in the production bundle.
 
 ```bash
 aws cloudformation describe-stacks --stack-name drive-and-decide --region us-east-1 \
-  --query "Stacks[0].Outputs[?OutputKey=='ApiUrl'].OutputValue" --output text
+  --query "Stacks[0].Outputs[?OutputKey=='ApiBase'].OutputValue" --output text
 ```
 
-Put that value in `.env.local` as `VITE_API_URL`. It is not a secret (the API is
+Put that value in `.env.local` as `VITE_API_BASE`. It is not a secret (the API is
 public and CORS is open), but it is per-deployment, so it stays out of source.
 
 ## Build & deploy

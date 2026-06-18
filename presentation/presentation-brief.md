@@ -178,7 +178,7 @@ Each slide: on-slide German content + English guidance + visual + source.
 - **Daten benötigt:** §8.
 
 ### Folie 13 — Ergebnisse: Sensitivitätsanalyse  `[TBD]`
-- **Inhalt (DE):** Variation von **Stellplatzzahl (200/350/500)**, Sensor-Stückkosten und
+- **Inhalt (DE):** Variation von **Stellplatzzahl (200/400/500)**, Sensor-Stückkosten und
   unterstellter Auslastungssteigerung → wie robust ist die Aussage?
 - **Visual:** Tornado-Diagramm oder Linienschar ROI/Break-Even über Stellplatzzahl.
 - **Daten benötigt:** §8.
@@ -209,10 +209,12 @@ Each slide: on-slide German content + English guidance + visual + source.
 
 **⚠️ Größtes Risiko — AWS Learner Lab:** Das Backend läuft im AWS Academy Learner Lab, das
 **manuell gestartet werden muss und nur 4 Stunden** läuft. Eine reine Live-Demo hängt damit
-davon ab, dass das Lab während des Vortrags aktiv ist und die in der Web-App fest eingebaute
-API-URL (`5akjc62zn1…`, siehe `web/.env.production`) noch stimmt. Bei einem Re-Deploy ändert
-sich die API-ID. **Empfehlung: hybrid** — Live versuchen, aber ein **aufgezeichnetes Video als
-Fallback** bereithalten (das Aufgabenblatt erlaubt Video ausdrücklich).
+davon ab, dass das Lab während des Vortrags aktiv ist. Die API-URL ist **nicht** fest
+eingebaut: `deploy.sh` liest sie aus dem Stack-Output (`ApiBase`) und schreibt sie beim Build
+in das **gitignorierte** `web/.env.production`. Bei einem Re-Deploy ändert sich die API-ID —
+einfach `deploy.sh` erneut ausführen (baut die Web-App neu und lädt sie hoch). **Empfehlung:
+hybrid** — Live versuchen, aber ein **aufgezeichnetes Video als Fallback** bereithalten (das
+Aufgabenblatt erlaubt Video ausdrücklich).
 
 **Was gezeigt wird (zwei Teile, ~5 min):**
 1. **Physisch (Realismus, „Aha-Moment"):** Modell-View (garage1, 4 Plätze, leer = grün). Ein
@@ -228,8 +230,8 @@ Fallback** bereithalten (das Aufgabenblatt erlaubt Video ausdrücklich).
 
 **Pre-Flight-Checkliste (vor dem Vortrag):**
 - [ ] AWS Lab gestartet, Restlaufzeit deckt den Vortragsslot ab (4-h-Fenster bewusst legen).
-- [ ] Stack `drive-and-decide` aktiv; API-URL stimmt mit `web/.env.production` überein
-      (sonst Web neu bauen oder URL anpassen).
+- [ ] Stack `drive-and-decide` aktiv; Web-App per `deploy.sh` neu gebaut & hochgeladen
+      (so stimmt die API-URL automatisch mit dem aktuellen Stack überein).
 - [ ] Web-App offen & geladen (Modell **und** Großgarage je einmal getestet).
 - [ ] ESP32 am Strom, mit **Handy-Hotspot** verbunden, Initial-Publish gesehen (Serial-Monitor).
 - [ ] Matchbox-Autos bereit; ein Trockenlauf der Belegung erfolgreich.
@@ -256,7 +258,7 @@ Die *Ergebnis-* und *Diskussionsfolien* (11–14) brauchen Zahlen, die es im Rep
 (`cost-model/` ist leer). Bitte liefern — oder ich helfe beim Aufbau des Kostenmodells:
 
 1. **CAPEX-Eingaben:** Stückkosten TCRT5000-Sensor, ESP32, Verkabelung/Platz, Installationsaufwand
-   (h × Satz), initiale Cloud-Konfiguration — je Stellplatz und gesamt für 200/350/500.
+   (h × Satz), initiale Cloud-Konfiguration — je Stellplatz und gesamt für 200/400/500.
 2. **OPEX-Eingaben:** gemessene AWS-Nutzung aus Lastläufen (Manifest-Mengen) → Hochrechnung auf
    Monat/Jahr; AWS-Stückpreise (IoT Core, Lambda, DynamoDB, Transfer, Speicher); Wartungs-%,
    Sensor-Lebensdauer/Austauschrate, Stromkosten.
