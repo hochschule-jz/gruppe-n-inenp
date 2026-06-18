@@ -1,0 +1,10 @@
+[
+    {
+        "ParameterKey":  "TotalSpots",
+        "ParameterValue":  "4"
+    },
+    {
+        "ParameterKey":  "GarageSpots",
+        "ParameterValue":  "{\"garage1\":4,\"garage2\":400}"
+    }
+]
