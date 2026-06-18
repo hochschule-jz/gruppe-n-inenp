@@ -27,7 +27,7 @@ cost-model/
     ├── benefits.py       # 4 pathways (utilisation uplift headline; conservative)
     ├── kpis.py           # TCO, ROI, payback, break-even (+ NPV via discount_rate)
     ├── model.py          # evaluate(assumptions, spots, scenario) -> Result
-    ├── sensitivity.py    # scale sweep (200/350/500) + one-way tornado
+    ├── sensitivity.py    # scale sweep (200/400/500) + one-way tornado
     ├── report.py         # Markdown tables + CSV export
     ├── figures.py        # optional matplotlib charts (PNG+SVG) for paper/slides
     ├── __main__.py       # CLI
@@ -70,7 +70,7 @@ profiles -> load_generator (dry-run/aws) -> run manifest (awsUsageEstimate)
 `--manifest` reads the load generator's run manifest and derives `events_per_spot_per_day`
 from `transitionMessages / durationSeconds / spots` (the **simulated** duration, not the
 time-compressed `sendSeconds`). The backend's `GarageSpots` parameter lets you deploy at
-200/350/500 to capture a **real metered** run for validation (see below).
+200/400/500 to capture a **real metered** run for validation (see below).
 
 ## The model in brief
 
@@ -106,7 +106,7 @@ means for this paper, by group:
 
 ### Getting the AWS usage numbers — two ways (do both if you can)
 
-1. **Modelled** (always available, no Lab): run the load generator at 200/350/500 in
+1. **Modelled** (always available, no Lab): run the load generator at 200/400/500 in
    `--transport dry-run`, take the manifest, feed it with `--manifest`. Add a read-side
    consumer assumption. This alone is a credible, reproducible OPEX estimate.
 2. **Measured** (the empirical anchor the paper asks for): start the AWS Lab, deploy with

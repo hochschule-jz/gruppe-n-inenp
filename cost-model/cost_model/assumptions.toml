@@ -63,4 +63,4 @@ dynamic_pricing_uplift_pct        = 2.0   # extra revenue on baseline (%)    —
 
 # --- Scale sweep ------------------------------------------------------------
 [scale]
-spot_counts = [200, 350, 500]    # garage sizes from the use case (methodology.tex §Use Case)
+spot_counts = [200, 400, 500]    # garage sizes from the use case (methodology.tex §Use Case)

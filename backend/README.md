@@ -52,7 +52,7 @@ aws cloudformation deploy \
 Lambda code is kept **inline in the template** (no separate source files), so the template
 stays a single, self-contained artifact that deploys without an S3 bucket — convenient in
 the Learner Lab. A single `TotalSpots` parameter (default `4`) drives both the validation
-range and the aggregation denominator — `4` for the physical demo, `200/350/500` for the
+range and the aggregation denominator — `4` for the physical demo, `200/400/500` for the
 virtual load-generator scale runs (see [`DEPLOY.md`](DEPLOY.md) §2).
 
 ## Traffic-light thresholds (shared with virtual/ and web/)

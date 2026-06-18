@@ -13,10 +13,10 @@ def test_evaluate_runs_with_default_assumptions():
 
 def test_breakeven_is_self_consistent_end_to_end():
     a = load_assumptions()
-    r = evaluate(a, 350, "base")
+    r = evaluate(a, 400, "base")
     open_h = a.load.hours_open_per_day * 365
     benefit = utilization_benefit(
-        350, r.breakeven_uplift_pp, a.benefits.parking_tariff_eur_per_space_hour, open_h
+        400, r.breakeven_uplift_pp, a.benefits.parking_tariff_eur_per_space_hour, open_h
     )
     assert abs(roi(r.capex.total, r.opex.total_annual, benefit, a.horizon_years, a.discount_rate)) < 1e-9
 

@@ -1,6 +1,6 @@
 """Scale sweep + one-way (tornado) sensitivity analysis.
 
-The scale sweep evaluates the mandated 200/350/500 garage sizes; the tornado varies each key
+The scale sweep evaluates the mandated 200/400/500 garage sizes; the tornado varies each key
 lever +/- ``delta`` and ranks them by impact on ROI, so the dominant drivers fall out.
 """
 
