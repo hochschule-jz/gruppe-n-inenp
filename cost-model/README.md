@@ -124,7 +124,7 @@ Exact source per `assumptions.toml` value (the per-line comments mirror this).
 
 ## Real-data guide
 
-Replace each placeholder in `assumptions.toml` and record the source here. What "real data"
+Each value in `assumptions.toml` is already filled from a cited source; use this guide to verify or refine those inputs. What "real data"
 means for this paper, by group:
 
 | Input(s) | Real data to use | Source / how to obtain |

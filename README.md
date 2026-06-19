@@ -17,7 +17,7 @@ architecture, used as the basis for an operator cost-benefit model. Hochschule B
 - `virtual/` — virtual prototype: MQTT load generator + traffic-light logic.
 - `web/` — thin garage-grid + traffic-light visualisation.
 - `cost-model/` — CAPEX/OPEX/TCO/ROI/break-even + sensitivity analysis.
-- `docs/` — the Phase 0 contract, measurements, demo runbook, screenshots.
+- `docs/` — cross-cutting project documentation (the Phase 0 contract).
 
 Each folder has its own `README.md` with its purpose and the relevant plan phase.
 

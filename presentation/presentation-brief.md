@@ -5,10 +5,10 @@ Computing course. This is a planning document: structural guidance is in English
 **slide titles and on-slide bullet text are pre-written in German** (the deck
 language — all three papers are German) so they can be pasted straight in.
 
-> **Status / blocker:** the *Ergebnisse* (results) and *Diskussion* slides need the
-> cost-benefit numbers, which **do not exist in the repo yet** (`cost-model/` is only
-> a README; the Final Paper `evaluation.tex` is a stub). Those slides are templated
-> with `[TBD]` markers. See [§8 Benötigte Daten](#8-benötigte-daten--offene-punkte).
+> **Status:** the cost-benefit numbers now exist — `cost-model/` is implemented and the
+> Final Paper `evaluation.tex` is complete. The results slides (11–14) are filled with the
+> actual figures (CAPEX 7.6–13.8 k€, OPEX 468–891 €/yr, break-even ~0,03–0,04 pp). The built
+> deck is `presentation/Drive-and-Decide.pptx`.
 
 ---
 
@@ -28,7 +28,7 @@ language — all three papers are German) so they can be pasted straight in.
 ## 2. Kernbotschaft (the one thing they should remember)
 
 > *Drive & Decide* zeigt, wie ein **ereignisgetriebenes, IoT-basiertes Smart-Parking-System
-> auf serverlosem AWS** die laufenden Cloud-Kosten **messbar** macht — und liefert
+> auf serverless AWS** die laufenden Cloud-Kosten **messbar** macht — und liefert
 > Parkhausbetreibern damit eine **nachvollziehbare Kosten-Nutzen-Grundlage**
 > (TCO, ROI, Break-Even) für die Investitionsentscheidung.
 
@@ -72,7 +72,7 @@ Each slide: on-slide German content + English guidance + visual + source.
 
 ### Folie 1 — Titel
 - **Inhalt (DE):** „Drive & Decide" · Untertitel „Wirtschaftlichkeit eines IoT-basierten
-  Smart-Parking-Systems auf serverlosem AWS" · Maximilian Seier & Julian Zankl ·
+  Smart-Parking-Systems auf serverless AWS" · Maximilian Seier & Julian Zankl ·
   FH Burgenland · Cloud Computing · Datum.
 - **Visual:** Projekt-Wortmarke + dezentes Ampel-Motiv (grün/gelb/rot). Optional ein Foto
   des physischen Prototyps.
@@ -119,7 +119,7 @@ Each slide: on-slide German content + English guidance + visual + source.
 - **Quelle:** `methodology.tex` (Use Case, Abgrenzung).
 
 ### Folie 6 — Systemarchitektur
-- **Inhalt (DE):** Serverlose AWS-Architektur: **AWS IoT Core** (Geräteanbindung + MQTT-Routing)
+- **Inhalt (DE):** Serverless AWS-Architektur: **AWS IoT Core** (Geräteanbindung + MQTT-Routing)
   → **AWS Lambda** (ereignisgetriebene Verarbeitung) → **Amazon DynamoDB** (aktueller Status)
   → **API Gateway** (Ausgabe). Keine dauerhaft laufenden Server → Voraussetzung für messbare
   Kosten.
@@ -141,7 +141,7 @@ Each slide: on-slide German content + English guidance + visual + source.
   - **Physisch (Realismus):** Box, deren Deckel eine Parkgarage mit **4 markierten Stellplätzen**
     ist; je ein **TCRT5000-IR-Sensor** unter dem Platz, ausgelesen vom **ESP32**, Publish via MQTT.
     (Matchbox-Fahrzeuge als Belegung.)
-  - **Virtuell (Skalierung):** Software-Lastgenerator simuliert **bis ~250 Stellplätze** über
+  - **Virtuell (Skalierung):** Software-Lastgenerator simuliert **bis ~400 Stellplätze** über
     **denselben** MQTT-Pfad + Einfahrts-Ampel — realistische Last & Cloud-Kosten ohne Hardware.
   - Beide nutzen identisches Topic + JSON-Schema (gemeinsamer „Contract").
 - **Visual:** links Foto der Box, rechts Screenshot Großgarage-View; Pfeil „gleicher Pfad".
@@ -221,7 +221,7 @@ Aufgabenblatt erlaubt Video ausdrücklich).
    Matchbox-Auto auf einen markierten Platz stellen → nach 1–2 s zeigt das Raster den Platz als
    belegt, Auslastung/Ampel aktualisieren sich. Mehrere Plätze belegen → Ampel grün→gelb→rot.
    Dabei den End-to-End-Pfad live erzählen (Sensor→MQTT→IoT Core→Lambda→DynamoDB→API→Web).
-2. **Virtuell (Skalierung):** Auf **Großgarage** (garage2, ~250 Plätze) wechseln. Button
+2. **Virtuell (Skalierung):** Auf **Großgarage** (garage2, ~400 Plätze) wechseln. Button
    **„Andrang simulieren"** → Loadgen-Lambda publiziert über **denselben** Pfad → Auslastung
    steigt, Heatmap füllt sich, Ampel wechselt. Aussage: so entsteht die OPEX-relevante Last
    ohne Hardware.
@@ -249,13 +249,12 @@ Aufgabenblatt erlaubt Video ausdrücklich).
 **Noch zu erstellen:**
 - **Foto(s) des physischen Prototyps** (Box mit 4 Plätzen, ESP32 innen).
 - **Demo-Fallback-Video** (~3–4 min, vertont).
-- Diagramme der Ergebnisse (CAPEX/OPEX, KPIs, Sensitivität) — sobald Zahlen vorliegen.
 - Ggf. FH-/Kurs-Foliendesign (Corporate Template), falls vorgegeben.
 
 ## 8. Benötigte Daten / offene Punkte
 
-Die *Ergebnis-* und *Diskussionsfolien* (11–14) brauchen Zahlen, die es im Repo noch nicht gibt
-(`cost-model/` ist leer). Bitte liefern — oder ich helfe beim Aufbau des Kostenmodells:
+Die *Ergebnis-* und *Diskussionsfolien* (11–14) sind inzwischen mit den real berechneten Zahlen
+aus `cost-model/` gefüllt. Die folgenden Eingangsgrößen liegen dem Modell zugrunde:
 
 1. **CAPEX-Eingaben:** Stückkosten TCRT5000-Sensor, ESP32, Verkabelung/Platz, Installationsaufwand
    (h × Satz), initiale Cloud-Konfiguration — je Stellplatz und gesamt für 200/400/500.
@@ -266,11 +265,11 @@ Die *Ergebnis-* und *Diskussionsfolien* (11–14) brauchen Zahlen, die es im Rep
    Parkerlös (€/Platz·h oder €/belegte Stunde), Aufschlag dynamische Preise, Datenverwertung.
 4. **Ergebnis-Kennzahlen:** TCO (5J), ROI, Amortisation, Break-Even — berechnet — + Sensitivitätsspannen.
 
-**Entschieden:** Demo = **Hybrid** (live + Video-Fallback) · Ergebnisfolien = **vorerst
-Platzhalter** · Sprecheraufteilung = **durch das Team** · Sprache = **Deutsch**.
+**Entschieden:** Demo = **Hybrid** (live + Video-Fallback) · Ergebnisfolien = **mit realen
+Zahlen gefüllt** · Sprecheraufteilung = **durch das Team** · Sprache = **Deutsch**.
 
 **Noch offen:**
-- **Kostenmodell-Daten (Punkte 1–4 oben):** sobald verfügbar → Ergebnisfolien 11–14 füllen.
+- **Foto des physischen Prototyps** und **Demo-Fallback-Video** in den Deck-Platzhaltern (Folien 8, 9).
 - **Termin/Slot:** Datum; sind 20–25 min inkl. oder exkl. Q&A?
 - **Template:** gibt es ein vorgegebenes FH-/Kurs-PPTX-Design?
 
@@ -291,6 +290,6 @@ Platzhalter** · Sprecheraufteilung = **durch das Team** · Sprache = **Deutsch*
 | 5, 10, 14 | `Final Paper/section/methodology.tex` |
 | 6, 7 | `methodology.tex` + `backend/template.yaml`, `backend/README.md`, `docs/contract.md` |
 | 8, 9 | `firmware/`, `virtual/load_generator/`, `virtual/traffic_light/`, `web/` |
-| 11–13 | `cost-model/` (zu erstellen) + Lauf-Manifeste; `evaluation.tex` (Stub) |
+| 11–13 | `cost-model/` + Lauf-Manifeste; `evaluation.tex` |
 | 15 | `Final Paper/section/conclusion.tex` |
 | 16 | `docs/contract.md`, `references.bib` |

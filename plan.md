@@ -1,41 +1,49 @@
 # Drive & Decide — offene Punkte
 
+**Stand:** Implementierung, Kostenmodell, Final Paper und Präsentationsdeck sind fertig.
+Offen sind im Wesentlichen nur noch die Demo-Assets (Foto/Video), der finale Build und etwas
+Logistik.
+
 **Erledigt:**
 - **Implementierung steht und ist getestet:** Backend als IaC-Template
   (`backend/template.yaml`, inkl. S3-Web-Hosting und Loadgen-Lambda), ESP32-Firmware
-  (TCRT5000), Web-View und die Virtualisierung (Load Generator + Ampelsystem, 49 Tests).
-  Der physische Demo-Prototyp (vier Stellplätze, ESP32 + Sensoren) wurde end-to-end mit
-  der Web-App verifiziert.
-- **Kostenmodell-Gerüst:** `cost-model/` ist ein getestetes Python-Paket
-  (CAPEX/OPEX/TCO/ROI/Break-Even + Sensitivität für 200/400/500, 22 Tests) — **aber alle
-  Eingabewerte sind noch Platzhalter** (`assumptions.toml`, jeweils „VERIFY").
-- **Deployment automatisiert:** `deploy.sh` (frisches Lab) sowie Update-/Reset-Wege in
-  `backend/DEPLOY.md`. Die API-URL wird aus dem Stack-Output erzeugt (gitignoriertes
-  `web/.env.production`), nicht mehr hartkodiert.
+  (TCRT5000), Web-View und Virtualisierung (Load Generator + Ampelsystem). Der physische
+  Demo-Prototyp (vier Stellplätze, ESP32 + Sensoren) wurde end-to-end mit der Web-App verifiziert.
+- **Kostenmodell mit echten Daten gefüllt:** `cost-model/` rechnet CAPEX/OPEX/TCO/ROI/Break-Even
+  + Sensitivität für 200/400/500 mit real recherchierten, in `assumptions.toml` belegten Werten
+  (AWS-Listenpreise, WIPARK-Tarif, österreichische Handwerker-/Strompreise, Vendor-Hardwarepreise,
+  Smart-Parking-Literatur). Ergebnisfiguren sind generiert. Headline-Kennzahl:
+  Break-Even ~0,03–0,04 pp; CAPEX 7.616–13.784 €, OPEX 468–891 €/Jahr.
+- **Final Paper fertig:** Evaluierungskapitel komplett (PoC, Probleme, Methodik, Ergebnisse +
+  Tabellen + Figuren), Abstract & Conclusion an die Ergebnisse angeglichen, Einleitungs-Roadmap
+  verweist auf das Evaluierungskapitel. Das Paper kompiliert (15 Seiten).
+- **Präsentation erstellt:** `presentation/Drive-and-Decide.pptx` (16 Folien, native Diagramme
+  mit den echten Zahlen, Sprechernotizen). Platzhalter für Prototyp-Foto (Folie 8) und
+  Demo-Fallback-Video (Folie 9).
+- **Deployment automatisiert:** `deploy.sh` (Bash) und `deploy.ps1` (PowerShell; GarageSpots-
+  Quoting-Bug via `params.json` + `file://` behoben). Die API-URL kommt aus dem Stack-Output
+  (gitignoriertes `web/.env.production`), nicht hartkodiert.
+- **AWS lauffähig:** Backend läuft im Free-Account (Julian) und im Lab des Kollegen; die
+  fehlende DynamoDB-Berechtigung der LabRole wurde behoben.
+- **Aufräumen/Konsistenz:** Branches `esp32`/`methodik`/`windows-deploy-script` gemergt
+  (`evaluation` obsolet); garage2 durchgehend auf 400 Stellplätze vereinheitlicht; Terminologie
+  auf „serverless" vereinheitlicht (Vorgabe Lehrender); veraltete Docs (cost-model-README,
+  Haupt-READMEs, Präsentations-Briefing) aktualisiert.
 
 **Offen:**
 
-1. **Kostenmodell mit echten Daten füllen** — der Engpass, der fast alles andere freischaltet:
-   - **CAPEX:** reale Stückpreise (TCRT5000, ESP32, Verkabelung, Installationssatz, Cloud-Setup).
-   - **OPEX:** *gemessene* AWS-Nutzung aus einem Load-Generator-Lauf (Run-Manifest — existiert
-     noch nicht) + AWS-Pricing-Calculator-Preise; Wartung, Sensor-Lebensdauer, Strom.
-   - **Nutzen:** realer Wiener Tarif, Basisauslastung, Auslastungssteigerung (Literatur).
-   - Danach Modell laufen lassen → Kennzahlen, Sensitivität, Diagramme + Annahmen-Tabelle.
+1. **Demo-Assets:** Foto des physischen Prototyps und vertontes Demo-Fallback-Video erstellen
+   und in die Deck-Platzhalter (Folien 8, 9) einsetzen. (Kollege nimmt auf.)
 
-2. **Final Paper – Kapitel „Evaluierung"** — auf `main` nur ein leerer Stub; der Entwurf liegt
-   auf dem ungemergten Branch `origin/evaluation`. Zu tun: mergen, „Ergebnisse",
-   „Berechnung der Kennzahlen" und „Probleme" füllen; offene Review-Punkte beheben
-   (Nutzen-Einheit €/belegte-Stunde statt „pro Parkvorgang", Read-Side-/API-Gateway-OPEX,
-   fehlende Tabelle `tab:assumptions`).
+2. **Finaler Build & Korrektur:** Paper final kompilieren (Overleaf/VS Code), Seitenzahl gegen
+   die Kurs-Vorgabe prüfen, Korrekturlesen.
 
-3. **Abstract & Conclusion angleichen** — der Abstract behauptet bereits Ergebnisse, die noch
-   nicht existieren; die Conclusion ist noch der **Position-Paper**-Text („Ausblick auf das
-   Final Paper … wird umgesetzt") und muss für das Final Paper neu geschrieben werden.
+3. **Git:** Offene Working-Tree-Änderungen committen (Paper-Edits, `deploy.ps1`, `.gitignore`,
+   Deck, Konsistenz-Edits); obsoleten Remote-Branch `evaluation` löschen.
 
-4. **Präsentation (PPTX) erstellen** — bisher nur das Briefing
-   (`presentation/presentation-brief.md`), keine Folien. Ergebnisfolien 11–14 brauchen die
-   Zahlen aus Punkt 1. Noch zu erstellen: Foto(s) des Prototyps, Demo-Fallback-Video,
-   Ergebnis-Diagramme (CAPEX/OPEX, KPIs, Sensitivität).
+4. **Optionale Verfeinerung:** Reale eu-central-1-AWS-Preise und gemessene Lambda-Laufzeit über
+   die jetzt funktionierende CLI ziehen; für einen plausiblen ROI einen realistischen
+   Nutzen-Erfassungsanteil ansetzen (aktuell wird bewusst der Break-Even berichtet).
 
-5. **Aufräumen / Logistik** — Branches `esp32`/`methodik` prüfen und mergen oder löschen;
-   Präsentationstermin/-format und ggf. FH-Foliendesign klären.
+5. **Logistik:** Präsentationstermin/-format klären, Sprecheraufteilung, ggf. FH-Foliendesign;
+   AWS-Stack nach Abgabe abbauen (Free-Account-Credits schonen).
