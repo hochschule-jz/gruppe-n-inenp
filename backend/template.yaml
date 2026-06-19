@@ -16,8 +16,8 @@ Parameters:
     Default: '{}'
     Description: >-
       Per-garage spot counts as a JSON object, e.g.
-      {"garage1":4,"garage2":250}. A garageId found here overrides TotalSpots,
-      so the 4-bay physical demo (garage1) and the 250-spot virtual load
+      {"garage1":4,"garage2":400}. A garageId found here overrides TotalSpots,
+      so the 4-bay physical demo (garage1) and the 400-spot virtual load
       generator (garage2) can run concurrently. Any garageId not listed falls
       back to TotalSpots.
 

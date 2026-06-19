@@ -11,7 +11,7 @@ export const API_BASE = (import.meta.env.VITE_API_BASE || "").replace(/\/+$/, ""
 
 // Per-scenario garageId on the shared backend:
 //   garage1 = the physical 4-bay demo board (Modell)
-//   garage2 = the virtual 350-spot load generator (Großgarage)
+//   garage2 = the virtual 400-spot load generator (Großgarage)
 export const GARAGE_IDS = { modell: "garage1", gross: "garage2" };
 
 export function utilizationUrl(garageId) {
