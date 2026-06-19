@@ -10,6 +10,7 @@ Drive \& Decide adressiert genau diese Lücke. Der Use Case definiert den Betrei
 
 \subsection{Technische Beschreibung des Versuchsaufbaus} \label{sec:technical-setup}
 
+Abbildung \ref{fig:workflow} visualisiert den allgemeinen Ablauf der Vision, 
 Abbildung \ref{fig:architecture} zeigt die Systemarchitektur im Überblick und dient als Orientierung für die folgenden Absätze. Der Versuchsaufbau ist bewusst zweigeteilt, um zwei unterschiedliche Erkenntnisinteressen abzudecken. Ein physischer Prototyp dient der realistischen Erfassung von Sensor- und Kommunikationsverhalten, während ein virtueller Prototyp die Skalierung auf eine ganze Parkgarage erlaubt. Diese Kombination ermöglicht es, sowohl reale Messwerte als auch lastabhängige Cloud-Kosten zu erheben.
 
 Der physische Prototyp besteht aus einem 3D-gedruckten Modell einer Parkgarage mit mehreren Stellplätzen, die mit Matchbox-Fahrzeugen belegt werden. Pro Stellplatz wird ein Belegungssensor verbaut, etwa ein \ac{ir}- oder \ac{tof}-Sensor, da diese Bauarten kostengünstig, kompakt und gut für eingebettete Anwendungen verfügbar sind \citep{perkovicSmartParkingSensors2020}. Die Sensoren werden über einen Mikrocontroller, beispielsweise einen ESP32, ausgelesen und die Belegungsereignisse via \ac{mqtt} an die Cloud übertragen.
@@ -17,6 +18,16 @@ Der physische Prototyp besteht aus einem 3D-gedruckten Modell einer Parkgarage m
 Der virtuelle Prototyp simuliert eine Parkgarage mit einer größeren Anzahl an Stellplätzen sowie ein Ampelsystem an der Einfahrt, das Belegungszustände aggregiert anzeigt. Belegungsereignisse werden in einem definierten Lastprofil generiert und über denselben \ac{mqtt}-Pfad an die Cloud übertragen wie beim physischen Modell. Auf diese Weise lassen sich realitätsnahe Lastszenarien für mehrere hundert Stellplätze durchspielen, ohne entsprechende Hardware physisch verbauen zu müssen.
 
 Das Backend folgt einer serverless Architektur auf \ac{aws}. \ac{aws} \ac{iot} Core übernimmt die Geräteanbindung und das Routing der \ac{mqtt}-Nachrichten, \ac{aws} Lambda verarbeitet eingehende Events ereignisgetrieben und Amazon DynamoDB speichert den aktuellen Belegungsstatus. Dieser Aufbau ist typisch für aktuelle \ac{iot}-getriebene \acp{sps} und vermeidet permanent betriebene Server, was für die spätere Kostenmodellierung von zentraler Bedeutung ist \citep{alaanzyRealTimeSmart2025,alamSurveyIoTDriven2023}.
+
+\begin{figure}[!ht]
+    \centering
+    \includegraphics[width=0.9\linewidth]{fig/workflow.jpg}
+    \caption{Vision des Use Cases}
+    \Description[Systemarchitektur]{Systemarchitektur von Drive \& Decide}
+    \label{fig:workflow}
+\end{figure}
+\FloatBarrier
+
 
 \begin{figure}[!ht]
     \centering
