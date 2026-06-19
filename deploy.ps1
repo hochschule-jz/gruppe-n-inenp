@@ -91,17 +91,29 @@ try {
     Write-Host "    Account: $account"
 
     Write-Host "==> Deploying stack '$StackName' (TotalSpots=$TotalSpots, GarageSpots=$GarageSpots)..."
+    # Pass parameters via a JSON file, not inline Key=Value: PowerShell strips the
+    # inner double quotes from a JSON value such as {"garage1":4} when forwarding it
+    # to the native aws executable, which stores invalid JSON in the Lambda
+    # GARAGE_SPOTS env var and crashes the functions at import. ConvertTo-Json
+    # guarantees correct escaping and file:// keeps the JSON away from the shell.
+    $paramsFile = Join-Path $RepoRoot 'params.json'
+    @(
+        [pscustomobject]@{ ParameterKey = 'TotalSpots';  ParameterValue = $TotalSpots }
+        [pscustomobject]@{ ParameterKey = 'GarageSpots'; ParameterValue = $GarageSpots }
+    ) | ConvertTo-Json | Set-Content -Path $paramsFile -Encoding ascii
+
     $deployArgs = @(
         'cloudformation', 'deploy',
         '--region', $Region,
         '--stack-name', $StackName,
         '--template-file', $BackendTemplate,
-        '--parameter-overrides', "TotalSpots=$TotalSpots", "GarageSpots=$GarageSpots",
+        '--parameter-overrides', 'file://params.json',
         '--capabilities', 'CAPABILITY_NAMED_IAM'
     )
 
     $deployOut = & aws @deployArgs 2>&1
     $deployExit = $LASTEXITCODE
+    Remove-Item -Path $paramsFile -ErrorAction SilentlyContinue
     $deployText = ($deployOut | Out-String)
     Write-Host $deployText
 
