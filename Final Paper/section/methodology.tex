@@ -16,7 +16,7 @@ Der physische Prototyp besteht aus einem 3D-gedruckten Modell einer Parkgarage m
 
 Der virtuelle Prototyp simuliert eine Parkgarage mit einer größeren Anzahl an Stellplätzen sowie ein Ampelsystem an der Einfahrt, das Belegungszustände aggregiert anzeigt. Belegungsereignisse werden in einem definierten Lastprofil generiert und über denselben \ac{mqtt}-Pfad an die Cloud übertragen wie beim physischen Modell. Auf diese Weise lassen sich realitätsnahe Lastszenarien für mehrere hundert Stellplätze durchspielen, ohne entsprechende Hardware physisch verbauen zu müssen.
 
-Das Backend folgt einer serverlosen Architektur auf \ac{aws}. \ac{aws} \ac{iot} Core übernimmt die Geräteanbindung und das Routing der \ac{mqtt}-Nachrichten, \ac{aws} Lambda verarbeitet eingehende Events ereignisgetrieben und Amazon DynamoDB speichert den aktuellen Belegungsstatus. Dieser Aufbau ist typisch für aktuelle \ac{iot}-getriebene \acp{sps} und vermeidet permanent betriebene Server, was für die spätere Kostenmodellierung von zentraler Bedeutung ist \citep{alaanzyRealTimeSmart2025,alamSurveyIoTDriven2023}.
+Das Backend folgt einer serverless Architektur auf \ac{aws}. \ac{aws} \ac{iot} Core übernimmt die Geräteanbindung und das Routing der \ac{mqtt}-Nachrichten, \ac{aws} Lambda verarbeitet eingehende Events ereignisgetrieben und Amazon DynamoDB speichert den aktuellen Belegungsstatus. Dieser Aufbau ist typisch für aktuelle \ac{iot}-getriebene \acp{sps} und vermeidet permanent betriebene Server, was für die spätere Kostenmodellierung von zentraler Bedeutung ist \citep{alaanzyRealTimeSmart2025,alamSurveyIoTDriven2023}.
 
 \begin{figure}[!ht]
     \centering
